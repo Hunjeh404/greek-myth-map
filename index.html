@@ -215,8 +215,9 @@ main.nopanel .zoom{display:none}
   }
   .panel.min{height:92px;overflow:hidden}
   .panel.max{height:86%}
-  .panel .grab{display:block;width:100%;height:22px;border:0;background:none;position:sticky;top:-6px;z-index:2}
-  .panel .grab::after{content:"";display:block;width:44px;height:5px;border-radius:3px;background:var(--lav-d);margin:6px auto}
+  .panel .grab{display:block;width:calc(100% + 36px);margin:0 -18px;height:34px;border:0;background:rgba(251,246,232,.96);position:sticky;top:-6px;z-index:2;touch-action:none;cursor:ns-resize}
+  .panel .grab::after{content:"";display:block;width:56px;height:6px;border-radius:3px;background:var(--lav-d);margin:10px auto}
+  .panel.short{overflow:hidden}
   .panel.hidden{display:none}
   .zoom{bottom:auto;top:52px}
   .crumbs{display:none}
@@ -768,14 +769,48 @@ function renderPanel(id, nb){
     ${state.withV && hidden ? `<p class="note">점선과 '이설' 표시는 출처에 따라 다르게 전해지는 관계예요.</p>` : ''}`;
   hydrateAv(panel);
   panel.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
-  panel.querySelector('.grab').onclick = () => {
-    if(panel.classList.contains('min')){ panel.classList.remove('min'); }
-    else if(panel.classList.contains('max')){ panel.classList.remove('max'); panel.classList.add('min'); }
-    else panel.classList.add('max');
-  };
   panel.classList.remove('hidden'); $('#main').classList.remove('nopanel');
   panel.scrollTop = 0;
 }
+/* 모바일: 손잡이를 끌어 패널 높이 조절, 짧게 누르면 단계 전환 */
+(function(){
+  let drag = null;
+  const MIN = 92;
+  const maxH = () => $('#main').clientHeight - 12;
+  panel.addEventListener('pointerdown', e => {
+    if(!e.target.closest('.grab') || innerWidth > 900) return;
+    e.preventDefault();
+    drag = {y:e.clientY, h:panel.getBoundingClientRect().height, moved:false, id:e.pointerId};
+    try{ panel.setPointerCapture(e.pointerId); }catch(_){}
+    panel.style.transition = 'none';
+  });
+  panel.addEventListener('pointermove', e => {
+    if(!drag || e.pointerId !== drag.id) return;
+    const dy = drag.y - e.clientY;
+    if(Math.abs(dy) > 4) drag.moved = true;
+    if(!drag.moved) return;
+    const h = Math.max(MIN, Math.min(maxH(), drag.h + dy));
+    panel.classList.remove('min', 'max');
+    panel.style.height = h + 'px';
+    panel.classList.toggle('short', h < 140);
+  });
+  const end = e => {
+    if(!drag || e.pointerId !== drag.id) return;
+    panel.style.transition = '';
+    if(!drag.moved){
+      // 짧게 누르면: 기본 → 크게 → 작게 → 기본
+      if(panel.classList.contains('short')) panel.classList.add('min');
+      panel.style.height = ''; panel.classList.remove('short');
+      if(panel.classList.contains('min')) panel.classList.remove('min');
+      else if(panel.classList.contains('max')){ panel.classList.remove('max'); panel.classList.add('min'); }
+      else panel.classList.add('max');
+    }
+    drag = null;
+  };
+  panel.addEventListener('pointerup', end);
+  panel.addEventListener('pointercancel', end);
+  window.addEventListener('resize', () => { if(innerWidth > 900){ panel.style.height = ''; panel.classList.remove('min','max','short'); } });
+})();
 function renderPanelKeep(id, nb){ const st = panel.scrollTop, cls = panel.className; renderPanel(id, nb); panel.className = cls; panel.scrollTop = st; }
 function openPanel(){ panel.classList.remove('hidden', 'min'); }
 
