@@ -1131,7 +1131,7 @@ const Sound = (() => {
     a.loop = true; a.volume = 0; a.preload = 'auto';
     a.addEventListener('error', () => { if(a._stop) return; bad.add(key); if(cur === a){ cur = null; curKey = null; } });
     cur = a; curKey = key;
-    a.play().then(() => fade(a, VOL * duck, 1400)).catch(() => { if(cur === a){ cur = null; curKey = null; } });
+    a.play().then(() => fade(a, VOL * duck, 1400)).catch(err => { if(cur === a){ cur = null; curKey = null; } if(err && err.name === 'NotAllowedError') unlocked = false; });
   }
   function scene(key){ if(!TRACKS[key]) key = 'main'; want = key; start(); }
   function chapter(n){ scene(CH_MOOD[n] || 'adventure'); }
@@ -1172,8 +1172,9 @@ const Sound = (() => {
     if(init) return;
     if(v){ unlocked = true; start(); } else stopCur();
   }
-  const unlock = () => { if(unlocked) return; unlocked = true; start(); };
-  ['pointerdown','keydown','touchstart'].forEach(ev => window.addEventListener(ev, unlock, {once:false, passive:true, capture:true}));
+  // 폰 브라우저는 손을 뗄 때(touchend·click)만 소리를 허락하므로 그 이벤트에서 시작. 실패하면 다음 터치에 다시 시도
+  const unlock = () => { if(unlocked && cur) return; unlocked = true; const c = ac(); start(); };
+  ['pointerup','touchend','click','keydown'].forEach(ev => window.addEventListener(ev, unlock, {passive:true, capture:true}));
   document.addEventListener('visibilitychange', () => { if(document.hidden){ if(cur) cur.pause(); } else if(cur && on){ cur.play().catch(() => {}); } else start(); });
   document.querySelectorAll('.sndbtn').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); setOn(!on); }));
   setOn(on, true);
