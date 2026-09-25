@@ -1111,7 +1111,7 @@ $('#lq').addEventListener('input', drawList);
 
 /* ---------- 소리 (배경음악·효과음) ---------- */
 const Sound = (() => {
-  const TRACKS = {main:'bgm-main', origin:'bgm-origin', battle:'bgm-battle', olympus:'bgm-olympus', love:'bgm-love', adventure:'bgm-adventure', sea:'bgm-sea', quiz:'bgm-quiz'};
+  const TRACKS = {main:'Threads_of_Olympus', origin:'Before_the_Stars', battle:'Thunder_on_the_Mountain', olympus:'Picnic_on_Olympus', love:'Orpheus_Lyre', adventure:'Road_of_Heroes', sea:'The_Long_Way_Home', quiz:'Oracle_Quiz'};
   const CH_MOOD = {1:'origin',2:'origin',3:'battle',4:'olympus',5:'olympus',6:'olympus',7:'love',8:'adventure',9:'adventure',10:'battle',11:'adventure',12:'adventure',13:'adventure',14:'adventure',15:'battle',16:'sea'};
   const VOL = 0.22;          // 배경음악 기본 볼륨(작게)
   let on = true; try { on = localStorage.getItem('myth.sound') !== '0'; } catch(e){}
@@ -1160,7 +1160,7 @@ const Sound = (() => {
       if(!on) return;
       duck = 0.25; if(cur) fade(cur, VOL * duck, 400);
       const back = () => { duck = 1; if(cur) fade(cur, VOL, 1200); };
-      const a = new Audio('audio/sfx-fanfare.mp3'); a.volume = 0.5;
+      const a = new Audio('audio/Laurel_Crown.mp3'); a.volume = 0.5;
       a.addEventListener('ended', back);
       a.play().catch(() => { [[523.25,0],[659.25,0.12],[783.99,0.24],[1046.5,0.38],[783.99,0.62],[1046.5,0.74]].forEach(([f,t], i) => tone(f, t, i > 3 ? 0.6 : 0.25, 'triangle', 0.11)); setTimeout(back, 1600); });
       a.addEventListener('error', () => {});
