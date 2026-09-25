@@ -89,7 +89,8 @@ header{
 main{position:relative;display:grid;grid-template-columns:1fr 400px;min-height:0}
 main.nopanel{grid-template-columns:1fr}
 .panel.hidden{display:none}
-main.nopanel .zoom{display:none}
+main.nopanel .zoom{top:14px;bottom:auto;z-index:6}
+main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 .search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
 .stage{position:relative;min-width:0;min-height:0;overflow:hidden}
 #graph{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
@@ -250,6 +251,7 @@ main.nopanel .zoom{display:none}
 .backpill.on{display:inline-flex;align-items:center;gap:8px}
 @media (max-width:900px){.backpill{bottom:auto;top:108px}}
 
+.sndbtn .s-off{display:none}.sndbtn.off .s-on{display:none}.sndbtn.off .s-off{display:block}.sndbtn.off{background:var(--gray)}
 /* 장면 그림 */
 .scene{margin:18px 0;border-radius:18px;overflow:hidden;border:1.5px solid var(--ink);background:var(--white);box-shadow:var(--shadow)}
 .scene .pic{position:relative;aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden}
@@ -397,6 +399,7 @@ main.nopanel .zoom{display:none}
     <div class="toolbar" id="toolbar"></div>
     <svg id="graph" aria-label="관계도"></svg>
     <div class="zoom">
+      <button class="ibtn sndbtn" aria-pressed="true" title="소리 끄기"><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
       <button class="ibtn" id="zin" title="확대"><img data-asset="images/icons/ui-zoom-in.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
       <button class="ibtn" id="zout" title="축소"><img data-asset="images/icons/ui-zoom-out.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
       <button class="ibtn" id="zfit" title="화면에 맞추기"><img data-asset="images/icons/ui-fit.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -425,11 +428,11 @@ main.nopanel .zoom{display:none}
   </div>
 </div>
 <div class="ov" id="ovBook" role="dialog" aria-label="이야기책">
-  <div class="obar"><button class="ibtn" id="bookToc" title="차례"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span class="lbl">차례</span></button><h2 id="bookTitle">이야기책</h2><button class="ibtn" id="bookClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="obar"><button class="ibtn" id="bookToc" title="차례"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span class="lbl">차례</span></button><h2 id="bookTitle">이야기책</h2><button class="ibtn sndbtn" aria-pressed="true" title="소리 끄기"><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button><button class="ibtn" id="bookClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="obody" id="bookBody"></div>
 </div>
 <div class="ov" id="ovQuiz" role="dialog" aria-label="퀴즈">
-  <div class="obar"><button class="ibtn" id="quizHomeBtn" title="퀴즈 처음"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span class="lbl">처음</span></button><h2 id="quizTitle">신화 퀴즈</h2><button class="ibtn" id="quizClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="obar"><button class="ibtn" id="quizHomeBtn" title="퀴즈 처음"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span class="lbl">처음</span></button><h2 id="quizTitle">신화 퀴즈</h2><button class="ibtn sndbtn" aria-pressed="true" title="소리 끄기"><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button><button class="ibtn" id="quizClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="obody" id="quizBody"></div>
 </div>
 <div class="tip" id="tip"></div>
@@ -1105,6 +1108,78 @@ modal.addEventListener('click', e => { if(e.target === modal) closeList(); });
 $('#lq').addEventListener('input', drawList);
 
 
+
+/* ---------- 소리 (배경음악·효과음) ---------- */
+const Sound = (() => {
+  const TRACKS = {main:'bgm-main', origin:'bgm-origin', battle:'bgm-battle', olympus:'bgm-olympus', love:'bgm-love', adventure:'bgm-adventure', sea:'bgm-sea', quiz:'bgm-quiz'};
+  const CH_MOOD = {1:'origin',2:'origin',3:'battle',4:'olympus',5:'olympus',6:'olympus',7:'love',8:'adventure',9:'adventure',10:'battle',11:'adventure',12:'adventure',13:'adventure',14:'adventure',15:'battle',16:'sea'};
+  const VOL = 0.22;          // 배경음악 기본 볼륨(작게)
+  let on = true; try { on = localStorage.getItem('myth.sound') !== '0'; } catch(e){}
+  let unlocked = false, want = 'main', curKey = null, cur = null, ctx = null, duck = 1;
+  const bad = new Set();
+  function fade(a, to, ms, done){
+    const from = a.volume, t0 = performance.now();
+    (function step(t){ const k = Math.min(1, (t - t0) / ms); a.volume = Math.max(0, Math.min(1, from + (to - from) * k)); if(k < 1) requestAnimationFrame(step); else if(done) done(); })(t0);
+  }
+  function stopCur(){ if(!cur) return; const a = cur; cur = null; curKey = null; a._stop = true; fade(a, 0, 900, () => { a.pause(); a.removeAttribute('src'); a.load(); }); }
+  function start(){
+    if(!on || !unlocked || document.hidden) return;
+    if(curKey === want && cur) return;
+    stopCur();
+    const key = want; if(bad.has(key)) return;
+    const a = new Audio(`audio/${TRACKS[key]}.mp3`);
+    a.loop = true; a.volume = 0; a.preload = 'auto';
+    a.addEventListener('error', () => { if(a._stop) return; bad.add(key); if(cur === a){ cur = null; curKey = null; } });
+    cur = a; curKey = key;
+    a.play().then(() => fade(a, VOL * duck, 1400)).catch(() => { if(cur === a){ cur = null; curKey = null; } });
+  }
+  function scene(key){ if(!TRACKS[key]) key = 'main'; want = key; start(); }
+  function chapter(n){ scene(CH_MOOD[n] || 'adventure'); }
+  function ac(){ if(!ctx){ try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ return null; } } if(ctx.state === 'suspended') ctx.resume(); return ctx; }
+  function tone(freq, t, dur, type = 'triangle', gain = 0.12){
+    const c = ac(); if(!c) return;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, c.currentTime + t);
+    g.gain.setValueAtTime(0, c.currentTime + t);
+    g.gain.linearRampToValueAtTime(gain, c.currentTime + t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0008, c.currentTime + t + dur);
+    o.connect(g).connect(c.destination); o.start(c.currentTime + t); o.stop(c.currentTime + t + dur + 0.05);
+  }
+  const sfx = {
+    ok(){ if(!on) return; [[1046.5,0],[1318.5,0.09],[1568,0.18]].forEach(([f,t]) => tone(f, t, 0.35, 'triangle', 0.10)); },
+    no(){ if(!on) return; tone(392, 0, 0.22, 'sine', 0.10); tone(311, 0.16, 0.34, 'sine', 0.09); },
+    page(){
+      if(!on) return; const c = ac(); if(!c) return;
+      const len = 0.28, buf = c.createBuffer(1, c.sampleRate * len, c.sampleRate), d = buf.getChannelData(0);
+      for(let i = 0; i < d.length; i++){ const k = i / d.length; d[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * k) * 0.5; }
+      const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+      f.type = 'bandpass'; f.frequency.setValueAtTime(900, c.currentTime); f.frequency.linearRampToValueAtTime(2600, c.currentTime + len); f.Q.value = 0.8;
+      g.gain.value = 0.18; s.buffer = buf; s.connect(f).connect(g).connect(c.destination); s.start();
+    },
+    fanfare(){
+      if(!on) return;
+      duck = 0.25; if(cur) fade(cur, VOL * duck, 400);
+      const back = () => { duck = 1; if(cur) fade(cur, VOL, 1200); };
+      const a = new Audio('audio/sfx-fanfare.mp3'); a.volume = 0.5;
+      a.addEventListener('ended', back);
+      a.play().catch(() => { [[523.25,0],[659.25,0.12],[783.99,0.24],[1046.5,0.38],[783.99,0.62],[1046.5,0.74]].forEach(([f,t], i) => tone(f, t, i > 3 ? 0.6 : 0.25, 'triangle', 0.11)); setTimeout(back, 1600); });
+      a.addEventListener('error', () => {});
+    }
+  };
+  function setOn(v, init){
+    on = v; try { localStorage.setItem('myth.sound', v ? '1' : '0'); } catch(e){}
+    document.querySelectorAll('.sndbtn').forEach(b => { b.classList.toggle('off', !v); b.title = v ? '소리 끄기' : '소리 켜기'; b.setAttribute('aria-pressed', v ? 'true' : 'false'); });
+    if(init) return;
+    if(v){ unlocked = true; start(); } else stopCur();
+  }
+  const unlock = () => { if(unlocked) return; unlocked = true; start(); };
+  ['pointerdown','keydown','touchstart'].forEach(ev => window.addEventListener(ev, unlock, {once:false, passive:true, capture:true}));
+  document.addEventListener('visibilitychange', () => { if(document.hidden){ if(cur) cur.pause(); } else if(cur && on){ cur.play().catch(() => {}); } else start(); });
+  document.querySelectorAll('.sndbtn').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); setOn(!on); }));
+  setOn(on, true);
+  return {scene, chapter, sfx};
+})();
+
 /* ---------- 이야기책·퀴즈 공통 ---------- */
 const BOOK = window.BOOK || [];
 const LS = {
@@ -1155,7 +1230,7 @@ function leaveTo(kind, id){
 }
 function wireLinks(root, kind){ root.querySelectorAll('[data-go]').forEach(b => b.onclick = e => { e.stopPropagation(); leaveTo(kind, b.dataset.go); }); }
 const ovBook = $('#ovBook'), ovQuiz = $('#ovQuiz');
-function closeOverlays(){ ovBook.classList.remove('on'); ovQuiz.classList.remove('on'); }
+function closeOverlays(){ ovBook.classList.remove('on'); ovQuiz.classList.remove('on'); Sound.scene('main'); }
 function setHash(h){ if(location.hash.slice(1) !== h) history.pushState(null, '', '#' + h); }
 function closeToGraph(){ closeOverlays(); if(state.cur) history.pushState(null, '', '#' + state.cur); else history.pushState(null, '', location.pathname); document.title = state.cur ? P[state.cur].ko + ' · 그리스 신화 관계도' : '그리스 신화 관계도'; }
 
@@ -1169,7 +1244,7 @@ function openBook(view){
   if(bookView == null) drawToc(); else drawChapter(bookView, true);
 }
 function drawToc(){
-  bookView = null;
+  bookView = null; Sound.scene('main');
   $('#bookTitle').textContent = '그리스 신화 이야기책';
   const prog = LS.get('book', {});
   const done = new Set(prog.done || []);
@@ -1189,7 +1264,8 @@ function drawToc(){
 }
 function drawChapter(n, restore){
   const ch = BOOK[n - 1]; if(!ch) return drawToc();
-  bookView = n;
+  if(bookView !== n && !restore) Sound.sfx.page();
+  bookView = n; Sound.chapter(n);
   $('#bookTitle').textContent = `${n}장 · ${ch.t}`;
   const wrap = document.createElement('div'); wrap.className = 'wrap chap';
   wrap.innerHTML = `<div class="no">${n}장</div><h3>${esc(ch.t)}</h3><p class="sub">${esc(ch.sub)}</p>`;
@@ -1237,12 +1313,13 @@ const MODE_NAME = k => k.startsWith('ch') ? `${k.slice(2)}장 퀴즈` : `자유 
 let quiz = null; // 진행 중인 퀴즈
 function openQuiz(){
   hideBackPill(); ovBook.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); document.title = '퀴즈 · 그리스 신화 관계도';
+  Sound.scene('quiz');
   if(quiz && !quiz.over) drawQ(); else drawQuizHome();
 }
 function hofGet(){ return LS.get('hof', {}); }
 function bestOf(mode){ const l = hofGet()[mode]; return l && l.length ? l[0].s : null; }
 function drawQuizHome(tab){
-  quiz = null;
+  quiz = null; Sound.scene('quiz');
   $('#quizTitle').textContent = '신화 퀴즈';
   const hof = hofGet();
   const tabs = ['free-easy','free-normal','free-hard', ...BOOK.map(c => 'ch' + c.n)];
@@ -1356,7 +1433,7 @@ function startQuiz(cfg){
     while(qs.length < 10){ const q = mkQ(cfg.lv, pool, used); if(!q) break; qs.push(q); }
     quiz = {mode:'free-' + cfg.lv, cfg, qs, i:0, score:0, combo:0, res:[], mul:LEVELS[cfg.lv].mul, per:10};
   }
-  ovBook.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); hideBackPill();
+  ovBook.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); hideBackPill(); Sound.scene('quiz');
   drawQ();
 }
 const PRAISE = ['정답이에요!', '딩동댕!', '대단해요!', '척척박사네요!', '완벽해요!', '신들도 깜짝 놀라겠어요!'];
@@ -1387,6 +1464,7 @@ function answer(k){
   z.res[z.i] = ok;
   if(ok){ z.combo++; z.score += z.per * z.mul + (z.combo >= 3 ? 5 * z.mul : 0); } else z.combo = 0;
   x.msg = ok ? pickOne(PRAISE) : pickOne(OOPS);
+  if(ok) Sound.sfx.ok(); else Sound.sfx.no();
   const st = quizBody.scrollTop; drawQ(); quizBody.scrollTop = st;
   const fb = quizBody.querySelector('.fb'); if(fb) fb.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
@@ -1404,7 +1482,7 @@ function showFb(w, x){
   wireLinks(fb, 'quiz');
 }
 function finish(){
-  const z = quiz; z.over = true;
+  const z = quiz; z.over = true; Sound.sfx.fanfare();
   const right = z.res.filter(Boolean).length, n = z.qs.length;
   const msg = right === n ? '만점! 신화 박사 인정!' : right >= n * 0.8 ? '아주 잘했어요!' : right >= n * 0.5 ? '좋아요, 조금만 더!' : '이야기책을 한 번 더 읽어 볼까요?';
   const star = z.mode.startsWith('ch') ? (BOOK[z.cfg.n - 1].b.find(b => b.k === 'who') || {}).id : z.qs[0].ids[z.qs[0].a];
