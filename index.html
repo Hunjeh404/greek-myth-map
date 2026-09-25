@@ -6,6 +6,7 @@
 <title>그리스 신화 관계도</title>
 <meta name="description" content="그리스 신화의 신·영웅·괴물을 검색하고 관계도로 탐색하는 앱">
 <meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FBF6E8">
 <link rel="icon" href="images/ui/favicon.png">
 <meta property="og:title" content="그리스 신화 관계도">
 <meta property="og:description" content="신·영웅·괴물을 검색하고 관계도로 탐색해 보세요">
@@ -21,7 +22,7 @@
   --mint-d:#A6C6B8; --salmon-d:#E8A777; --lav-d:#B6B1C4; --blue-d:#97AEC4; --gray:#C8CCD6; --wood:#B8A07A; --ink:#3A3739;
   /* 보조색 */
   --navy:#49536D; --navy-d:#2E3A57; --khaki:#C7B890;
-  --paper:#FBF6E8; --line:rgba(58,55,57,.18); --muted:#6E6863;
+  --paper:#FBF6E8; --line:rgba(58,55,57,.18); --muted:#5F5955;
   --radius:18px; --shadow:0 2px 0 rgba(58,55,57,.08),0 8px 24px rgba(58,55,57,.08);
   --font:"Gowun Dodum",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --hand:"Nanum Pen Script","Gowun Dodum",cursive;
@@ -35,7 +36,7 @@ body{
   background-size:512px auto, auto;
   overflow:hidden; -webkit-tap-highlight-color:transparent;
 }
-button{font:inherit;color:inherit;cursor:pointer}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .app{display:grid;grid-template-rows:auto 1fr;height:100%;height:100dvh}
 
 /* 헤더 */
@@ -77,7 +78,7 @@ header{
 .sg .tx{min-width:0}
 .hbtns{display:flex;gap:6px;margin-left:auto}
 .ibtn{
-  height:40px;min-width:40px;padding:0 12px;border-radius:20px;border:1.5px solid var(--ink);background:var(--white);
+  height:44px;min-width:44px;padding:0 12px;border-radius:22px;border:1.5px solid var(--ink);background:var(--white);
   display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:14px;box-shadow:0 2px 0 rgba(58,55,57,.12)
 }
 .ibtn:hover{background:var(--gold)}
@@ -98,7 +99,7 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 .toolbar{position:absolute;left:14px;top:12px;right:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;z-index:5;pointer-events:none}
 .toolbar > *{pointer-events:auto}
 .chip{
-  display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:15px;border:1.5px solid var(--ink);
+  display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 13px;border-radius:19px;border:1.5px solid var(--ink);
   background:var(--white);font-size:13px;user-select:none;box-shadow:0 2px 0 rgba(58,55,57,.1)
 }
 .chip .dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(0,0,0,.25)}
@@ -115,11 +116,16 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 /* 노드 */
 .node{cursor:pointer}
 .node .ring{fill:var(--white);stroke:var(--ink);stroke-width:1.6}
-.node .nm{font-family:var(--font);font-size:14px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
-.node .tag{font-family:var(--font);font-size:12px;paint-order:stroke;stroke:var(--paper);stroke-width:3.5px;stroke-linejoin:round}
-.node.center .nm{font-size:18px}
+.node .nm{font-family:var(--font);font-size:calc(14px * var(--ts,1));font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
+.node .tag{font-family:var(--font);font-size:calc(12px * var(--ts,1));paint-order:stroke;stroke:var(--paper);stroke-width:3.5px;stroke-linejoin:round}
+.node.center .nm{font-size:calc(18px * var(--ts,1))}
+#graph.far .node:not(.center) .tag{display:none}
+.node .hit{fill:transparent;stroke:none}
 .node:hover .ring,.node:focus .ring{stroke-width:3}
 .node:focus{outline:none}
+.node:focus-visible .ring{stroke:#C9A43A;stroke-width:5}
+button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #C9A43A;outline-offset:2px}
+.search input:focus-visible,.qr input:focus-visible,.sheet .top input:focus-visible{outline:3px solid #C9A43A;outline-offset:1px}
 .node .pop{animation:pop .45s cubic-bezier(.3,1.5,.5,1) both}
 @keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
 .edge{fill:none;stroke-width:2.2;stroke-linecap:round;opacity:.85;animation:fadein .5s both}
@@ -127,7 +133,7 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 .edge.hl{stroke-width:4;opacity:1}
 @keyframes fadein{from{opacity:0}}
 .more .ring{fill:var(--gold)}
-.sector-label{font-family:var(--hand);font-size:22px;fill:var(--muted)}
+.sector-label{font-family:var(--hand);font-size:calc(22px * min(var(--ts,1), 1.4));fill:var(--muted)}
 
 /* 상세 패널 */
 .panel{
@@ -164,12 +170,12 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 .rels h3 .dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(0,0,0,.25)}
 .rels h3 small{font-family:var(--font);font-size:12px;color:var(--muted)}
 .rl{display:flex;flex-wrap:wrap;gap:6px}
-.rp{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 3px;border-radius:18px;border:1px solid rgba(58,55,57,.25);background:var(--white);font-size:13.5px;cursor:pointer;max-width:100%}
+.rp{min-height:40px;display:inline-flex;align-items:center;gap:6px;padding:5px 12px 5px 5px;border-radius:18px;border:1px solid rgba(58,55,57,.25);background:var(--white);font-size:13.5px;cursor:pointer;max-width:100%}
 .rp:hover{background:var(--gold)}
 .rp .av{width:26px;height:26px;flex-shrink:0}
-.rp .n{font-size:11.5px;color:var(--muted)}
+.rp .n{font-size:12.5px;color:var(--muted)}
 .rp.v{border-style:dashed}
-.rp .vb{font-size:10.5px;background:var(--lav);border-radius:6px;padding:0 4px}
+.rp .vb{font-size:12px;background:var(--lav);border-radius:6px;padding:0 4px}
 .note{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.5}
 
 /* 아바타 */
@@ -223,11 +229,14 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
   }
   .panel.min{height:92px;overflow:hidden}
   .panel.max{height:86%}
-  .panel .grab{display:block;width:calc(100% + 36px);margin:0 -18px;height:34px;border:0;background:rgba(251,246,232,.96);position:sticky;top:-6px;z-index:2;touch-action:none;cursor:ns-resize}
-  .panel .grab::after{content:"";display:block;width:56px;height:6px;border-radius:3px;background:var(--lav-d);margin:10px auto}
+  .panel .grab{display:block;width:calc(100% + 36px);margin:0 -18px;height:44px;border:0;background:rgba(251,246,232,.96);position:sticky;top:-6px;z-index:2;touch-action:none;cursor:ns-resize}
+  .panel .grab::after{content:"";display:block;width:56px;height:6px;border-radius:3px;background:var(--lav-d);margin:14px auto}
   .panel.short{overflow:hidden}
   .panel.hidden{display:none}
-  .zoom{bottom:auto;top:52px}
+  .zoom{bottom:auto;top:58px}
+  .toolbar{flex-wrap:nowrap;overflow-x:auto;right:0;padding-right:14px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  .toolbar::-webkit-scrollbar{display:none}
+  .toolbar .chip{flex-shrink:0}
   .crumbs{display:none}
   .portrait{width:84px;height:84px}
   .hero h2{font-size:22px}
@@ -242,7 +251,7 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 .ov .obar h2{margin:0;flex:1;font-family:var(--brush);font-weight:400;font-size:28px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ov .obody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .ov .wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px}
-.pillbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--ink);border-radius:22px;background:var(--white);padding:9px 16px;font-size:15px;box-shadow:0 3px 0 rgba(58,55,57,.12)}
+.pillbtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--ink);border-radius:22px;background:var(--white);padding:9px 16px;font-size:15px;box-shadow:0 3px 0 rgba(58,55,57,.12)}
 .pillbtn:active{transform:translateY(1px);box-shadow:none}
 .pillbtn.pri{background:var(--gold)}
 .pillbtn.navy{background:var(--navy);color:var(--white)}
@@ -252,6 +261,14 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 @media (max-width:900px){.backpill{bottom:auto;top:108px}}
 
 .sndbtn .s-off{display:none}.sndbtn.off .s-on{display:none}.sndbtn.off .s-off{display:block}.sndbtn.off{background:var(--gray)}
+#ovBook .obar{position:relative}
+.prog{position:absolute;left:0;right:0;bottom:-1.5px;height:4px;display:none}
+.prog.on{display:block}
+.prog i{display:block;height:100%;width:0;background:var(--navy);border-radius:0 2px 2px 0;transition:width .15s linear}
+.tipb{position:fixed;z-index:58;max-width:min(300px,82vw);background:var(--navy);color:var(--white);border-radius:16px;padding:12px 14px 12px 16px;font-size:15px;line-height:1.5;box-shadow:0 8px 24px rgba(46,58,87,.3);display:flex;gap:10px;align-items:flex-start}
+.tipb button{flex-shrink:0;border:0;background:var(--gold);color:var(--ink);border-radius:12px;padding:4px 12px;font-size:14px;min-height:44px}
+.tipb::after{content:"";position:absolute;width:14px;height:14px;background:var(--navy);transform:rotate(45deg);left:var(--ax,50%);margin-left:-7px}
+.tipb.up::after{top:-6px}.tipb.down::after{bottom:-6px}
 /* 장면 그림 */
 .scene{margin:18px 0;border-radius:18px;overflow:hidden;border:1.5px solid var(--ink);background:var(--white);box-shadow:var(--shadow)}
 .scene .pic{position:relative;aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden}
@@ -276,7 +293,7 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 .toc .ti small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 .toc .done{float:right;font-size:12px;background:var(--mint);border:1px solid var(--ink);border-radius:10px;padding:1px 7px;margin-top:3px}
 .chap h3{font-family:var(--brush);font-weight:400;font-size:40px;margin:0;line-height:1.1}
-.chap .no{font-family:var(--hand);font-size:22px;color:var(--wood)}
+.chap .no{font-family:var(--hand);font-size:22px;color:#7A6443}
 .chap .sub{font-family:var(--hand);font-size:21px;color:var(--muted);margin:2px 0 0}
 .chap p.tx{font-size:17.5px;line-height:1.95;margin:12px 0;word-break:keep-all}
 .chap .sl{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--wood);text-underline-offset:3px;cursor:pointer}
@@ -362,7 +379,7 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
   .brand h1{font-size:21px}
 }
 @media (max-width:520px){
-  header .ibtn{padding:0;width:38px;min-width:38px;height:38px}
+  header .ibtn{padding:0;width:44px;min-width:44px;height:44px}
   header{gap:6px}
   .brand h1{font-size:19px}
   .backpill{top:196px;left:12px;transform:none;padding:8px 14px;font-size:14px}
@@ -430,7 +447,7 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
   </div>
 </div>
 <div class="ov" id="ovBook" role="dialog" aria-label="이야기책">
-  <div class="obar"><button class="ibtn" id="bookToc" title="차례"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span class="lbl">차례</span></button><h2 id="bookTitle">이야기책</h2><button class="ibtn sndbtn" aria-pressed="true" title="소리 끄기"><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button><button class="ibtn" id="bookClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="obar"><button class="ibtn" id="bookToc" title="차례"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span class="lbl">차례</span></button><h2 id="bookTitle">이야기책</h2><div class="prog" id="bookProg" aria-hidden="true"><i></i></div><button class="ibtn sndbtn" aria-pressed="true" title="소리 끄기"><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button><button class="ibtn" id="bookClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="obody" id="bookBody"></div>
 </div>
 <div class="ov" id="ovQuiz" role="dialog" aria-label="퀴즈">
@@ -500,7 +517,7 @@ function avatar(p, size){
   el.style.background = CAT_COLOR[p.cat];
   el.innerHTML = `<span class="ini" style="font-size:${Math.round(size*0.62)}px">${esc(initialOf(p))}</span>`;
   const u = portraitUrl.get(p.id);
-  const put = url => { if(!url) return; el.innerHTML = `<img alt="" src="${url}">`; };
+  const put = url => { if(!url) return; el.innerHTML = `<img alt="" width="${size}" height="${size}" decoding="async" src="${url}">`; };
   if(typeof u === 'string') put(u); else findPortrait(p.id).then(put);
   return el;
 }
@@ -509,7 +526,7 @@ function hydrateAv(root){
   root.querySelectorAll('[data-av]').forEach(el => {
     const id = el.dataset.av; el.removeAttribute('data-av');
     const u = portraitUrl.get(id);
-    const put = url => { if(url) el.innerHTML = `<img alt="" src="${url}">`; };
+    const sz = el.dataset.size || 64; const put = url => { if(url) el.innerHTML = `<img alt="" width="${sz}" height="${sz}" decoding="async" src="${url}">`; };
     if(typeof u === 'string') put(u); else if(u !== null) findPortrait(id).then(put);
   });
 }
@@ -745,6 +762,7 @@ function layout(center, nb){
 function nodeEl(parent, p, x, y, r, opts){
   const g = mk('g', {class:'node' + (opts.center ? ' center' : '') + (opts.more ? ' more' : ''), transform:`translate(${x},${y})`, tabindex:0, role:'button', 'aria-label':opts.aria || p?.ko || ''}, parent);
   const inner = mk('g', {class:'pop', style:`animation-delay:${opts.delay || 0}ms;transform-origin:0 0`}, g);
+  mk('circle', {class:'hit', r:r + 6, 'data-r':r + 6}, inner);
   if(opts.more){
     mk('circle', {r, class:'ring'}, inner);
     const t = mk('text', {'text-anchor':'middle', dy:'0.35em', class:'nm', style:'font-size:15px'}, inner); t.textContent = opts.label;
@@ -824,12 +842,20 @@ function extent(nodes){
 }
 
 /* ---------- 확대·이동 ---------- */
-function applyView(){ if(world) world.setAttribute('transform', `translate(${state.view.x},${state.view.y}) scale(${state.view.k})`); }
-function fit(){
+function applyView(){
+  if(!world) return;
+  const k = state.view.k;
+  world.setAttribute('transform', `translate(${state.view.x},${state.view.y}) scale(${k})`);
+  // 축소돼도 이름은 화면에서 최소 12px, 누르는 영역은 최소 지름 44px
+  svg.style.setProperty('--ts', Math.max(1, 12 / (14 * k)).toFixed(3));
+  svg.classList.toggle('far', k < 0.7);
+  world.querySelectorAll('.node .hit').forEach(c => c.setAttribute('r', Math.max(+c.dataset.r, 22 / k)));
+}
+function fit(full){
   const W = svg.clientWidth || 800, H = svg.clientHeight || 600;
   const topPad = 50, botPad = window.innerWidth <= 900 && !$('#panel').classList.contains('hidden') ? $('#panel').offsetHeight : 20;
   const availH = H - topPad - botPad;
-  const minK = W < 700 ? 0.42 : 0.55;
+  const minK = full ? 0.3 : (W < 700 ? 0.62 : 0.55);
   const k = Math.min(1.2, Math.max(minK, Math.min(W / bounds.w, availH / bounds.h)));
   state.view = {k, x:W/2, y:topPad + availH/2};
   applyView();
@@ -859,7 +885,7 @@ let dragMoved = false;
 })();
 $('#zin').onclick = () => zoomAt(1.25);
 $('#zout').onclick = () => zoomAt(0.8);
-$('#zfit').onclick = () => fit();
+$('#zfit').onclick = () => fit(true);
 window.addEventListener('resize', () => { if(state.cur) fit(); });
 
 /* ---------- 툴팁 ---------- */
@@ -1033,6 +1059,7 @@ function track(path, title){
 function go(id, push = true){
   if(!P[id]) return;
   track('/인물/' + P[id].ko, P[id].ko);
+  firstVisitTips();
   if(state.cur !== id){ state.expanded.clear(); }
   const i = state.trail.indexOf(id);
   if(i >= 0) state.trail.splice(i, 1);
@@ -1211,6 +1238,8 @@ function linkBook(text, used){
   return linkify(t, null, used).replace(/\u0001(\d+)\u0002/g, (m, k) => esc(keep[k - 1]));
 }
 const sceneOK = new Map();
+const sceneIO = new WeakMap();
+const sceneObs = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ sceneObs.unobserve(e.target); const f = sceneIO.get(e.target); if(f) f(); } }), {rootMargin:'300px 0px'}) : null;
 function sceneFigure(ch, i, opts = {}){
   const b = ch.b.find(x => x.k === 'img' && x.i === i);
   const f = b ? b.f : `images/scenes/c${String(ch.n).padStart(2,'0')}-${String(i).padStart(2,'0')}.png`;
@@ -1221,11 +1250,14 @@ function sceneFigure(ch, i, opts = {}){
   el.className = 'scene soon';
   el.innerHTML = `<div class="pic" style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 75%)"><div class="faces" style="--fs:${fs}px">${who.map(id => avHTML(P[id], 90)).join('')}</div></div>${b && b.cap && !opts.nocap ? `<figcaption>${esc(b.cap === '장 표지' ? ch.t : b.cap)}</figcaption>` : ''}`;
   hydrateAv(el);
-  const put = () => { const img = new Image(); img.className = 'full'; img.alt = b ? b.cap : ''; img.src = f; el.querySelector('.pic').appendChild(img); el.classList.remove('soon'); };
-  const known = sceneOK.get(f);
-  if(known === true) put();
-  else if(known === undefined){ const pr = probe(f); sceneOK.set(f, pr); pr.then(ok => { sceneOK.set(f, ok); if(ok) put(); }); }
-  else if(known && known.then) known.then(ok => { if(ok) put(); });
+  const put = () => { const img = new Image(); img.className = 'full'; img.alt = b ? b.cap : ''; img.width = 1200; img.height = 900; img.decoding = 'async'; img.src = f; el.querySelector('.pic').appendChild(img); el.classList.remove('soon'); };
+  const load = () => {
+    const known = sceneOK.get(f);
+    if(known === true) put();
+    else if(known === undefined){ const pr = probe(f); sceneOK.set(f, pr); pr.then(ok => { sceneOK.set(f, ok); if(ok) put(); }); }
+    else if(known && known.then) known.then(ok => { if(ok) put(); });
+  };
+  if('IntersectionObserver' in window){ sceneIO.set(el, load); sceneObs.observe(el); } else load();
   return el;
 }
 let backTo = null;
@@ -1309,6 +1341,7 @@ function drawChapter(n, restore){
 }
 function markDone(n){ const p = LS.get('book', {}); p.done = [...new Set([...(p.done || []), n])]; LS.set('book', p); }
 bookBody.addEventListener('scroll', () => {
+  const pr = $('#bookProg'); if(pr){ const m = bookBody.scrollHeight - bookBody.clientHeight; pr.firstChild.style.width = (bookView == null || m <= 0 ? 0 : Math.min(100, bookBody.scrollTop / m * 100)) + '%'; pr.classList.toggle('on', bookView != null); }
   if(bookView == null) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
@@ -1487,7 +1520,7 @@ function answer(k){
 function showFb(w, x){
   const ok = x.picked === x.a;
   w.querySelectorAll('.opts button').forEach((b, k) => { if(k === x.a) b.classList.add('ok'); else if(k === x.picked) b.classList.add('no'); });
-  const fb = document.createElement('div'); fb.className = 'fb' + (ok ? '' : ' no');
+  const fb = document.createElement('div'); fb.className = 'fb' + (ok ? '' : ' no'); fb.setAttribute('role', 'status'); fb.setAttribute('aria-live', 'polite');
   fb.innerHTML = `<b>${esc(x.msg)}</b>${ok ? '' : `정답은 「${esc(x.o[x.a])}」예요. `}${linkBook(x.e, new Set())}`;
   w.appendChild(fb);
   const nx = document.createElement('button'); nx.className = 'pillbtn navy next';
@@ -1536,6 +1569,29 @@ $('#wBook').onclick = () => openBook();
 $('#wQuiz').onclick = () => openQuiz();
 document.addEventListener('keydown', e => { if(e.key === 'Escape' && (ovBook.classList.contains('on') || ovQuiz.classList.contains('on'))) closeToGraph(); });
 
+
+/* ---------- 처음 방문 안내 (한 번만) ---------- */
+function showTip2(text, target, place, done){
+  const t = document.createElement('div'); t.className = 'tipb ' + (place === 'below' ? 'up' : 'down'); t.setAttribute('role', 'status');
+  t.innerHTML = `<span>${text}</span><button type="button">알겠어요</button>`;
+  document.body.appendChild(t);
+  const r = target.getBoundingClientRect(), w = t.offsetWidth, h = t.offsetHeight;
+  const cx = r.left + r.width / 2, left = Math.max(12, Math.min(innerWidth - w - 12, cx - w / 2));
+  t.style.left = left + 'px'; t.style.setProperty('--ax', (cx - left) + 'px');
+  t.style.top = (place === 'below' ? r.bottom + 12 : r.top - h - 12) + 'px';
+  let closed = false; const close = () => { if(closed) return; closed = true; t.remove(); clearTimeout(tm); if(done) done(); };
+  t.querySelector('button').onclick = close; const tm = setTimeout(close, 7000);
+}
+function firstVisitTips(){
+  if(LS.get('tips', 0)) return; LS.set('tips', 1);
+  setTimeout(() => {
+    const c = document.querySelector('#graph .node.center'); if(!c) return;
+    showTip2('다른 인물을 누르면 그 인물이 가운데로 와요. 두 손가락으로 확대할 수 있어요.', c, 'below', () => {
+      if(innerWidth <= 900){ const g = document.querySelector('.panel .grab'); if(g && !panel.classList.contains('hidden')) showTip2('아래 창을 위로 끌어 올리면 이 인물의 이야기를 읽을 수 있어요.', g, 'above'); }
+      else if(!panel.classList.contains('hidden')) showTip2('오른쪽에서 이 인물의 이야기와 관계를 읽을 수 있어요.', panel, 'below');
+    });
+  }, 1200);
+}
 /* ---------- 시작 ---------- */
 const FEAT = ['zeus','heracles','athena','medusa','achilles','odysseus','poseidon','perseus','hades','persephone','oedipus','cerberus'];
 $('#feat').innerHTML = FEAT.map(id => `<button data-go="${id}">${avHTML(P[id], 30)}${esc(P[id].ko)}</button>`).join('');
