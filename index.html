@@ -372,6 +372,8 @@ main.nopanel .zoom .ibtn:not(.sndbtn){display:none}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<script>window.goatcounter = {no_onload: true};</script>
+<script data-goatcounter="https://kaylastudio.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div class="app">
@@ -1020,8 +1022,17 @@ function renderPanelKeep(id, nb){ const st = panel.scrollTop, cls = panel.classN
 function openPanel(){ panel.classList.remove('hidden', 'min'); }
 
 /* ---------- 이동·기록 ---------- */
+/* ---------- 방문 통계 (GoatCounter, 쿠키·개인정보 없음) ---------- */
+let lastTrack = '';
+function track(path, title){
+  if(path === lastTrack) return; lastTrack = path;
+  const send = () => { try { window.goatcounter.count({path, title: title || path}); } catch(e){} };
+  if(window.goatcounter && window.goatcounter.count) send();
+  else { let n = 0; const t = setInterval(() => { if(window.goatcounter && window.goatcounter.count){ clearInterval(t); send(); } else if(++n > 20) clearInterval(t); }, 500); }
+}
 function go(id, push = true){
   if(!P[id]) return;
+  track('/인물/' + P[id].ko, P[id].ko);
   if(state.cur !== id){ state.expanded.clear(); }
   const i = state.trail.indexOf(id);
   if(i >= 0) state.trail.splice(i, 1);
@@ -1038,6 +1049,7 @@ function renderCrumbs(){
 }
 window.addEventListener('popstate', () => { const id = decodeURIComponent(location.hash.slice(1)); if(id === 'book'){ openBook(); return; } if(id === 'quiz'){ openQuiz(); return; } closeOverlays(); if(P[id]) go(id, false); else showHome(false); });
 function showHome(push = true){
+  track('/', '첫 화면');
   state.cur = null; svg.innerHTML = ''; $('#toolbar').innerHTML = ''; $('#crumbs').innerHTML = '';
   panel.classList.add('hidden'); $('#main').classList.add('nopanel'); $('#welcome').style.display = '';
   document.title = '그리스 신화 관계도';
@@ -1245,6 +1257,7 @@ function openBook(view){
   if(bookView == null) drawToc(); else drawChapter(bookView, true);
 }
 function drawToc(){
+  track('/이야기책', '이야기책 차례');
   bookView = null; Sound.scene('main');
   $('#bookTitle').textContent = '그리스 신화 이야기책';
   const prog = LS.get('book', {});
@@ -1266,7 +1279,7 @@ function drawToc(){
 function drawChapter(n, restore){
   const ch = BOOK[n - 1]; if(!ch) return drawToc();
   if(bookView !== n && !restore) Sound.sfx.page();
-  bookView = n; Sound.chapter(n);
+  bookView = n; Sound.chapter(n); track('/이야기책/' + n + '장', n + '장 ' + ch.t);
   $('#bookTitle').textContent = `${n}장 · ${ch.t}`;
   const wrap = document.createElement('div'); wrap.className = 'wrap chap';
   wrap.innerHTML = `<div class="no">${n}장</div><h3>${esc(ch.t)}</h3><p class="sub">${esc(ch.sub)}</p>`;
@@ -1320,6 +1333,7 @@ function openQuiz(){
 function hofGet(){ return LS.get('hof', {}); }
 function bestOf(mode){ const l = hofGet()[mode]; return l && l.length ? l[0].s : null; }
 function drawQuizHome(tab){
+  track('/퀴즈', '퀴즈 처음');
   quiz = null; Sound.scene('quiz');
   $('#quizTitle').textContent = '신화 퀴즈';
   const hof = hofGet();
@@ -1418,6 +1432,7 @@ function mkQ(lv, pool, usedIds){
   return null;
 }
 function startQuiz(cfg){
+  track(cfg.kind === 'ch' ? '/퀴즈/장퀴즈/' + cfg.n + '장' : '/퀴즈/자유/' + LEVELS[cfg.lv].t, '퀴즈');
   let qs;
   if(cfg.kind === 'ch'){
     const ch = BOOK[cfg.n - 1];
@@ -1528,6 +1543,7 @@ hydrateAv($('#feat'));
 $('#feat').querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
 wireAssets(document);
 const start = decodeURIComponent(location.hash.slice(1));
+if(!P[start] && start !== 'book' && start !== 'quiz') track('/', '첫 화면');
 if(P[start]) go(start, false);
 else if(start === 'book') openBook();
 else if(start === 'quiz') openQuiz();
