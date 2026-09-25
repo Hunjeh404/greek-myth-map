@@ -233,6 +233,141 @@ main.nopanel .zoom{display:none}
   .modal{padding:0}
   .sheet{border-radius:0;height:100%}
 }
+
+/* ---------- 이야기책·퀴즈 공통 오버레이 ---------- */
+.ov{position:fixed;inset:0;z-index:60;display:none;flex-direction:column;background:url(images/ui/bg.png) repeat, var(--cream);background-size:512px auto,auto}
+.ov.on{display:flex}
+.ov .obar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1.5px solid var(--line);background:rgba(251,246,232,.94);flex-shrink:0}
+.ov .obar h2{margin:0;flex:1;font-family:var(--brush);font-weight:400;font-size:28px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ov .obody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ov .wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px}
+.pillbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--ink);border-radius:22px;background:var(--white);padding:9px 16px;font-size:15px;box-shadow:0 3px 0 rgba(58,55,57,.12)}
+.pillbtn:active{transform:translateY(1px);box-shadow:none}
+.pillbtn.pri{background:var(--gold)}
+.pillbtn.navy{background:var(--navy);color:var(--white)}
+.pillbtn svg{width:18px;height:18px}
+.backpill{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:55;display:none;background:var(--navy);color:var(--white);border:1.5px solid var(--ink);border-radius:24px;padding:10px 18px;font-size:15px;box-shadow:0 6px 18px rgba(46,58,87,.3)}
+.backpill.on{display:inline-flex;align-items:center;gap:8px}
+@media (max-width:900px){.backpill{bottom:auto;top:108px}}
+
+/* 장면 그림 */
+.scene{margin:18px 0;border-radius:18px;overflow:hidden;border:1.5px solid var(--ink);background:var(--white);box-shadow:var(--shadow)}
+.scene .pic{position:relative;aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden}
+.scene .pic img.full{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scene .faces{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:0;padding:12px;max-width:92%}
+.scene .faces .av{width:var(--fs,96px);height:var(--fs,96px);margin:0 -8px;border:2px solid var(--white);box-shadow:0 2px 8px rgba(58,55,57,.18)}
+.scene .faces .av .ini{font-size:40px!important}
+.scene figcaption{font-family:var(--hand);font-size:20px;line-height:1.25;padding:8px 14px 10px;background:var(--paper);border-top:1.5px dashed var(--line);color:var(--navy)}
+.scene.soon figcaption::after{content:" · 그림 준비 중";font-family:var(--font);font-size:12px;color:var(--muted)}
+
+/* 이야기책 */
+.bk-hero{text-align:center;margin:4px 0 18px}
+.bk-hero h3{font-family:var(--brush);font-weight:400;font-size:40px;margin:0}
+.bk-hero p{font-family:var(--hand);font-size:21px;color:var(--muted);margin:2px 0 12px}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.toc button{display:block;text-align:left;border:1.5px solid var(--ink);border-radius:16px;background:var(--white);padding:0;overflow:hidden;box-shadow:var(--shadow)}
+.toc .scene{margin:0;border:0;border-radius:0;box-shadow:none}
+.toc .scene figcaption{display:none}
+.toc .scene .faces .av{--fs:58px}
+.toc .ti{padding:8px 12px 10px}
+.toc .ti b{display:block;font-family:var(--hand);font-weight:400;font-size:22px;line-height:1.1}
+.toc .ti small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.toc .done{float:right;font-size:12px;background:var(--mint);border:1px solid var(--ink);border-radius:10px;padding:1px 7px;margin-top:3px}
+.chap h3{font-family:var(--brush);font-weight:400;font-size:40px;margin:0;line-height:1.1}
+.chap .no{font-family:var(--hand);font-size:22px;color:var(--wood)}
+.chap .sub{font-family:var(--hand);font-size:21px;color:var(--muted);margin:2px 0 0}
+.chap p.tx{font-size:17.5px;line-height:1.95;margin:12px 0;word-break:keep-all}
+.chap .sl{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--wood);text-underline-offset:3px;cursor:pointer}
+.who{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 4px;border:1.5px solid var(--ink);border-radius:40px 16px 16px 40px;background:var(--paper);padding:5px 14px 5px 5px;text-align:left}
+.who .av{width:58px;height:58px;flex-shrink:0}
+.who b{display:block;font-family:var(--hand);font-weight:400;font-size:22px;line-height:1.1}
+.who small{display:block;color:var(--muted);font-size:13px}
+.who .go{margin-left:auto;font-size:12px;color:var(--navy);white-space:nowrap}
+.chap .scene{max-width:640px;margin-left:auto;margin-right:auto}
+.chend{margin:26px 0 0;padding:16px;border:1.5px dashed var(--wood);border-radius:18px;background:var(--gold);text-align:center}
+.chend p{font-family:var(--hand);font-size:22px;margin:0 0 10px}
+.chend .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+
+/* 퀴즈 */
+.qz-sec{margin:0 0 22px}
+.qz-sec h3{font-family:var(--hand);font-weight:400;font-size:26px;margin:0 0 8px;color:var(--navy)}
+.lv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.lv button{border:1.5px solid var(--ink);border-radius:16px;padding:14px 8px;background:var(--white);box-shadow:var(--shadow);text-align:center}
+.lv button b{display:block;font-family:var(--hand);font-weight:400;font-size:26px}
+.lv button small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35}
+.lv button:nth-child(1){background:var(--mint)}.lv button:nth-child(2){background:var(--blue)}.lv button:nth-child(3){background:var(--lav)}
+.chq{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.chq button{border:1.5px solid var(--ink);border-radius:14px;background:var(--white);padding:8px 10px;text-align:left;font-size:14px;line-height:1.3}
+.chq button small{display:block;color:var(--muted);font-size:12px}
+.hof{border:1.5px solid var(--ink);border-radius:16px;background:var(--white);overflow:hidden}
+.hof .tabs{display:flex;overflow-x:auto;border-bottom:1.5px solid var(--line);background:var(--paper)}
+.hof .tabs button{border:0;background:none;padding:9px 12px;font-size:14px;white-space:nowrap;border-bottom:3px solid transparent}
+.hof .tabs button.on{border-bottom-color:var(--navy);font-weight:700}
+.hof ol{list-style:none;margin:0;padding:6px 0}
+.hof li{display:flex;align-items:center;gap:10px;padding:7px 14px;font-size:15px}
+.hof li .rk{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--ink);font-size:13px;background:var(--cream);flex-shrink:0}
+.hof li:nth-child(1) .rk{background:var(--gold)}.hof li:nth-child(2) .rk{background:var(--gray)}.hof li:nth-child(3) .rk{background:var(--salmon)}
+.hof li .nm{flex:1;font-family:var(--hand);font-size:21px}
+.hof li .sc{font-weight:700}
+.hof li .dt{color:var(--muted);font-size:12px}
+.hof li.me{background:var(--mint)}
+.hof .empty{padding:18px;text-align:center;color:var(--muted)}
+.qp .top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.qp .dots{display:flex;gap:5px;flex:1;flex-wrap:wrap}
+.qp .dots i{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--ink);background:var(--white)}
+.qp .dots i.ok{background:var(--mint-d)}.qp .dots i.no{background:var(--salmon-d)}.qp .dots i.cur{background:var(--gold)}
+.qp .score{font-family:var(--hand);font-size:24px;white-space:nowrap}
+.qp .combo{font-size:12px;background:var(--salmon);border:1px solid var(--ink);border-radius:10px;padding:1px 8px}
+.qp .qimg{width:min(220px,60vw);aspect-ratio:1;margin:6px auto 10px;border-radius:50%;overflow:hidden;border:2px solid var(--ink);box-shadow:var(--shadow)}
+.qp .qimg .av{width:100%;height:100%}
+.qp .qimg .av .ini{font-size:90px!important}
+.qp .scene{margin:4px 0 12px}
+.qp .scene figcaption{display:none}
+.qp .q{font-size:20px;line-height:1.55;font-weight:700;margin:6px 0 14px;word-break:keep-all}
+.qp .opts{display:grid;gap:9px}
+.qp .opts button{display:flex;align-items:center;gap:10px;border:1.5px solid var(--ink);border-radius:16px;background:var(--white);padding:10px 14px;font-size:17px;text-align:left;box-shadow:0 3px 0 rgba(58,55,57,.1);min-height:54px}
+.qp .opts button .av{width:40px;height:40px;flex-shrink:0}
+.qp .opts button .n{width:26px;height:26px;border-radius:50%;border:1px solid var(--ink);display:grid;place-items:center;font-size:13px;flex-shrink:0;background:var(--cream)}
+.qp .opts button.ok{background:var(--mint);border-width:2.5px}
+.qp .opts button.no{background:var(--salmon)}
+.qp .opts button:disabled{cursor:default;color:var(--ink)}
+.qp .fb{margin-top:14px;border:1.5px dashed var(--wood);border-radius:16px;padding:12px 14px;background:var(--gold);font-size:15.5px;line-height:1.7;word-break:keep-all}
+.qp .fb.no{background:var(--lav)}
+.qp .fb b{display:block;font-family:var(--hand);font-weight:400;font-size:26px;color:var(--navy)}
+.qp .fb .sl{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--navy);text-underline-offset:3px;cursor:pointer}
+.qp .next{margin-top:14px;width:100%}
+.qr{text-align:center}
+.qr .big{font-family:var(--brush);font-size:72px;line-height:1;margin:10px 0 0;color:var(--navy)}
+.qr .msg{font-family:var(--hand);font-size:26px;margin:4px 0 14px}
+.qr .stamp{width:min(200px,50vw);aspect-ratio:1;margin:0 auto;border-radius:50%;overflow:hidden;border:2px solid var(--ink)}
+.qr .stamp .av{width:100%;height:100%}
+.qr form{display:flex;gap:8px;justify-content:center;margin:16px 0}
+.qr input{height:46px;border-radius:23px;border:1.5px solid var(--ink);background:var(--white);padding:0 16px;font:inherit;font-size:17px;width:min(220px,55vw);outline:none}
+.qr .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0 18px}
+.qr .wrong{text-align:left;margin-top:16px}
+.qr .wrong h4{font-family:var(--hand);font-weight:400;font-size:22px;margin:0 0 6px}
+.qr .wrong div{border:1px solid var(--line);border-radius:12px;background:var(--white);padding:8px 12px;margin:0 0 6px;font-size:14.5px;line-height:1.55}
+.welcome .modes{display:flex;gap:10px;justify-content:center;margin:0 0 16px;flex-wrap:wrap}
+.welcome .modes .pillbtn{font-size:17px;padding:11px 20px}
+@media (max-width:900px){
+  .ov .obar h2{font-size:24px}
+  .chap h3{font-size:32px}
+  .chap p.tx{font-size:17px}
+  .toc{grid-template-columns:repeat(2,1fr);gap:10px}
+  .toc .ti b{font-size:19px}
+  .scene .faces .av{--fs:74px}
+  .lv button b{font-size:22px}
+  .brand h1{font-size:21px}
+}
+@media (max-width:520px){
+  header .ibtn{padding:0;width:38px;min-width:38px;height:38px}
+  header{gap:6px}
+  .brand h1{font-size:19px}
+  .backpill{top:196px;left:12px;transform:none;padding:8px 14px;font-size:14px}
+}
+@media (max-width:900px){ .brand{min-width:0;flex:1} .brand>span:last-child{min-width:0} .brand h1{overflow:hidden;text-overflow:ellipsis} .hbtns{flex-shrink:0;margin-left:auto} }
+@media (max-width:420px){ .brand h1{font-size:17px} .brand .logo{width:30px;height:30px} }
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -251,6 +386,8 @@ main.nopanel .zoom{display:none}
     <div class="suggest" id="suggest" role="listbox"></div>
   </div>
   <div class="hbtns">
+    <button class="ibtn" id="btnBook" title="이야기책"><img data-asset="images/icons/ui-book.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg><span class="lbl">이야기책</span></button>
+    <button class="ibtn" id="btnQuiz" title="퀴즈"><img data-asset="images/icons/ui-quiz.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg><span class="lbl">퀴즈</span></button>
     <button class="ibtn" id="btnList" title="전체 목록"><img data-asset="images/icons/ui-list.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span class="lbl">목록</span></button>
     <button class="ibtn" id="btnRand" title="아무나 보기"><img data-asset="images/icons/ui-random.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg><span class="lbl">아무나</span></button>
   </div>
@@ -273,6 +410,7 @@ main.nopanel .zoom{display:none}
         <div class="tips">
           <span>초성 <code>ㅈㅇㅅ</code></span><span>오타 <code>헤라클래스</code></span><span>중간 글자 <code>클레스</code></span><span>별칭 <code>아약스</code> <code>주피터</code></span>
         </div>
+        <div class="modes"><button class="pillbtn pri" id="wBook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg>이야기책 읽기</button><button class="pillbtn navy" id="wQuiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>퀴즈 풀기</button></div>
         <div class="feat" id="feat"></div>
       </div>
     </div>
@@ -286,9 +424,18 @@ main.nopanel .zoom{display:none}
     <div class="body" id="mbody"></div>
   </div>
 </div>
+<div class="ov" id="ovBook" role="dialog" aria-label="이야기책">
+  <div class="obar"><button class="ibtn" id="bookToc" title="차례"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span class="lbl">차례</span></button><h2 id="bookTitle">이야기책</h2><button class="ibtn" id="bookClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="obody" id="bookBody"></div>
+</div>
+<div class="ov" id="ovQuiz" role="dialog" aria-label="퀴즈">
+  <div class="obar"><button class="ibtn" id="quizHomeBtn" title="퀴즈 처음"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span class="lbl">처음</span></button><h2 id="quizTitle">신화 퀴즈</h2><button class="ibtn" id="quizClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="obody" id="quizBody"></div>
+</div>
 <div class="tip" id="tip"></div>
 <script src="data.js"></script>
 <script src="stories.js"></script>
+<script src="book.js"></script>
 <script>
 (function(){
 'use strict';
@@ -886,7 +1033,7 @@ function renderCrumbs(){
   c.innerHTML = state.trail.map((id, i) => `${i ? '<span class="sep">›</span>' : ''}<button class="crumb${id === state.cur ? ' cur' : ''}" data-go="${id}">${esc(P[id].ko)}</button>`).join('');
   c.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
 }
-window.addEventListener('popstate', () => { const id = decodeURIComponent(location.hash.slice(1)); if(P[id]) go(id, false); else showHome(false); });
+window.addEventListener('popstate', () => { const id = decodeURIComponent(location.hash.slice(1)); if(id === 'book'){ openBook(); return; } if(id === 'quiz'){ openQuiz(); return; } closeOverlays(); if(P[id]) go(id, false); else showHome(false); });
 function showHome(push = true){
   state.cur = null; svg.innerHTML = ''; $('#toolbar').innerHTML = ''; $('#crumbs').innerHTML = '';
   panel.classList.add('hidden'); $('#main').classList.add('nopanel'); $('#welcome').style.display = '';
@@ -957,6 +1104,344 @@ $('#mclose').onclick = closeList;
 modal.addEventListener('click', e => { if(e.target === modal) closeList(); });
 $('#lq').addEventListener('input', drawList);
 
+
+/* ---------- 이야기책·퀴즈 공통 ---------- */
+const BOOK = window.BOOK || [];
+const LS = {
+  get(k, d){ try { const v = localStorage.getItem('myth.' + k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem('myth.' + k, JSON.stringify(v)); } catch(e){} }
+};
+const hasJong = s => { const c = (s || '').replace(/\(.*?\)/g, '').trim().slice(-1).charCodeAt(0); return c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; };
+const josa = (s, a, b) => s + (hasJong(s) ? a : b); // josa('제우스','을','를')
+const nm = id => P[id].ko;
+const shuffle = a => { for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pickOne = a => a[Math.floor(Math.random() * a.length)];
+const BOOK_SKIP = new Set(['아이올로스']); // 이야기책 속 동명이인
+function linkBook(text, used){
+  let t = text; const keep = [];
+  BOOK_SKIP.forEach(n => { t = t.split(n).join('\u0001' + keep.push(n) + '\u0002'); });
+  return linkify(t, null, used).replace(/\u0001(\d+)\u0002/g, (m, k) => esc(keep[k - 1]));
+}
+const sceneOK = new Map();
+function sceneFigure(ch, i, opts = {}){
+  const b = ch.b.find(x => x.k === 'img' && x.i === i);
+  const f = b ? b.f : `images/scenes/c${String(ch.n).padStart(2,'0')}-${String(i).padStart(2,'0')}.png`;
+  const who = (b ? b.who : []).filter(id => P[id]).slice(0, opts.max || 5);
+  const tint = ['var(--lav)','var(--gold)','var(--mint)','var(--blue)','var(--salmon)'][ch.n % 5];
+  const fs = who.length <= 1 ? 150 : who.length === 2 ? 118 : who.length === 3 ? 100 : 84;
+  const el = document.createElement('figure');
+  el.className = 'scene soon';
+  el.innerHTML = `<div class="pic" style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 75%)"><div class="faces" style="--fs:${fs}px">${who.map(id => avHTML(P[id], 90)).join('')}</div></div>${b && b.cap && !opts.nocap ? `<figcaption>${esc(b.cap === '장 표지' ? ch.t : b.cap)}</figcaption>` : ''}`;
+  hydrateAv(el);
+  const put = () => { const img = new Image(); img.className = 'full'; img.alt = b ? b.cap : ''; img.src = f; el.querySelector('.pic').appendChild(img); el.classList.remove('soon'); };
+  const known = sceneOK.get(f);
+  if(known === true) put();
+  else if(known === undefined){ const pr = probe(f); sceneOK.set(f, pr); pr.then(ok => { sceneOK.set(f, ok); if(ok) put(); }); }
+  else if(known && known.then) known.then(ok => { if(ok) put(); });
+  return el;
+}
+let backTo = null;
+const backPill = document.createElement('button');
+backPill.className = 'backpill';
+document.body.appendChild(backPill);
+backPill.onclick = () => { const t = backTo; hideBackPill(); if(t === 'book') openBook(); else if(t === 'quiz') openQuiz(); };
+function hideBackPill(){ backPill.classList.remove('on'); backTo = null; }
+function leaveTo(kind, id){
+  closeOverlays();
+  backTo = kind;
+  backPill.innerHTML = kind === 'book' ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg>이야기책으로 돌아가기' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>퀴즈로 돌아가기';
+  backPill.classList.add('on');
+  go(id);
+}
+function wireLinks(root, kind){ root.querySelectorAll('[data-go]').forEach(b => b.onclick = e => { e.stopPropagation(); leaveTo(kind, b.dataset.go); }); }
+const ovBook = $('#ovBook'), ovQuiz = $('#ovQuiz');
+function closeOverlays(){ ovBook.classList.remove('on'); ovQuiz.classList.remove('on'); }
+function setHash(h){ if(location.hash.slice(1) !== h) history.pushState(null, '', '#' + h); }
+function closeToGraph(){ closeOverlays(); if(state.cur) history.pushState(null, '', '#' + state.cur); else history.pushState(null, '', location.pathname); document.title = state.cur ? P[state.cur].ko + ' · 그리스 신화 관계도' : '그리스 신화 관계도'; }
+
+/* ---------- 이야기책 ---------- */
+const bookBody = $('#bookBody');
+let bookView = null; // null=목차, 숫자=장 번호
+let saveTimer = 0;
+function openBook(view){
+  hideBackPill(); ovQuiz.classList.remove('on'); ovBook.classList.add('on'); setHash('book'); document.title = '이야기책 · 그리스 신화 관계도';
+  if(view !== undefined) bookView = view;
+  if(bookView == null) drawToc(); else drawChapter(bookView, true);
+}
+function drawToc(){
+  bookView = null;
+  $('#bookTitle').textContent = '그리스 신화 이야기책';
+  const prog = LS.get('book', {});
+  const done = new Set(prog.done || []);
+  bookBody.innerHTML = `<div class="wrap"><div class="bk-hero"><h3>처음부터 차례차례</h3><p>세상의 시작부터 영웅들의 귀향까지, 16개 장</p>${prog.ch ? `<button class="pillbtn pri" id="bkCont">${prog.ch}장 「${esc(BOOK[prog.ch - 1].t)}」 이어 읽기</button>` : `<button class="pillbtn pri" id="bkCont">1장부터 읽기</button>`}</div><div class="toc" id="toc"></div></div>`;
+  const toc = $('#toc');
+  BOOK.forEach(ch => {
+    const b = document.createElement('button');
+    b.appendChild(sceneFigure(ch, 0, {nocap:true, max:4}));
+    const ti = document.createElement('div'); ti.className = 'ti';
+    ti.innerHTML = `${done.has(ch.n) ? '<span class="done">다 읽음</span>' : ''}<small>${ch.n}장</small><b>${esc(ch.t)}</b><small>${esc(ch.sub)}</small>`;
+    b.appendChild(ti);
+    b.onclick = () => drawChapter(ch.n);
+    toc.appendChild(b);
+  });
+  $('#bkCont').onclick = () => drawChapter(prog.ch || 1, true);
+  bookBody.scrollTop = 0;
+}
+function drawChapter(n, restore){
+  const ch = BOOK[n - 1]; if(!ch) return drawToc();
+  bookView = n;
+  $('#bookTitle').textContent = `${n}장 · ${ch.t}`;
+  const wrap = document.createElement('div'); wrap.className = 'wrap chap';
+  wrap.innerHTML = `<div class="no">${n}장</div><h3>${esc(ch.t)}</h3><p class="sub">${esc(ch.sub)}</p>`;
+  const used = new Set();
+  ch.b.forEach(b => {
+    if(b.k === 'img') wrap.appendChild(sceneFigure(ch, b.i));
+    else if(b.k === 'who'){
+      const p = P[b.id]; const w = document.createElement('button'); w.className = 'who'; w.dataset.go = b.id;
+      w.innerHTML = `${avHTML(p, 58)}<span><b>${esc(p.ko)}</b><small>${esc(D.cats[p.cat])} · ${esc(p.dom)}</small></span><span class="go">관계도 ›</span>`;
+      wrap.appendChild(w);
+    } else { const el = document.createElement('p'); el.className = 'tx'; el.innerHTML = linkBook(b.t, used); wrap.appendChild(el); }
+  });
+  const end = document.createElement('div'); end.className = 'chend';
+  end.innerHTML = `<p>${n}장을 다 읽었어요! 얼마나 기억하는지 퀴즈로 확인해 볼까요?</p><div class="row"><button class="pillbtn navy" id="chQuiz">${n}장 퀴즈 풀기</button>${n > 1 ? `<button class="pillbtn" id="chPrev">‹ ${n - 1}장</button>` : ''}${n < BOOK.length ? `<button class="pillbtn pri" id="chNext">${n + 1}장 「${esc(BOOK[n].t)}」 ›</button>` : ''}<button class="pillbtn" id="chToc">차례</button></div>`;
+  wrap.appendChild(end);
+  bookBody.innerHTML = ''; bookBody.appendChild(wrap);
+  hydrateAv(wrap);
+  wireLinks(wrap, 'book');
+  $('#chQuiz').onclick = () => { markDone(n); startQuiz({kind:'ch', n}); };
+  if($('#chPrev')) $('#chPrev').onclick = () => drawChapter(n - 1);
+  if($('#chNext')) $('#chNext').onclick = () => { markDone(n); drawChapter(n + 1); };
+  $('#chToc').onclick = drawToc;
+  const prog = LS.get('book', {});
+  const y = restore && prog.ch === n ? (prog.y || 0) : 0;
+  prog.ch = n; if(!restore || prog.ch !== n) prog.y = y; LS.set('book', prog);
+  requestAnimationFrame(() => { bookBody.scrollTop = y; });
+}
+function markDone(n){ const p = LS.get('book', {}); p.done = [...new Set([...(p.done || []), n])]; LS.set('book', p); }
+bookBody.addEventListener('scroll', () => {
+  if(bookView == null) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    const p = LS.get('book', {}); p.ch = bookView; p.y = bookBody.scrollTop;
+    if(bookBody.scrollTop + bookBody.clientHeight >= bookBody.scrollHeight - 40){ p.done = [...new Set([...(p.done || []), bookView])]; }
+    LS.set('book', p);
+  }, 300);
+});
+$('#bookClose').onclick = closeToGraph;
+$('#bookToc').onclick = drawToc;
+
+/* ---------- 퀴즈 ---------- */
+const quizBody = $('#quizBody');
+const LEVELS = {easy:{t:'쉬움', d:'이야기책 주인공들', mul:1}, normal:{t:'보통', d:'이름난 신·영웅·괴물', mul:2}, hard:{t:'어려움', d:'392명 전부', mul:3}};
+const MODE_NAME = k => k.startsWith('ch') ? `${k.slice(2)}장 퀴즈` : `자유 퀴즈 · ${LEVELS[k.slice(5)].t}`;
+let quiz = null; // 진행 중인 퀴즈
+function openQuiz(){
+  hideBackPill(); ovBook.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); document.title = '퀴즈 · 그리스 신화 관계도';
+  if(quiz && !quiz.over) drawQ(); else drawQuizHome();
+}
+function hofGet(){ return LS.get('hof', {}); }
+function bestOf(mode){ const l = hofGet()[mode]; return l && l.length ? l[0].s : null; }
+function drawQuizHome(tab){
+  quiz = null;
+  $('#quizTitle').textContent = '신화 퀴즈';
+  const hof = hofGet();
+  const tabs = ['free-easy','free-normal','free-hard', ...BOOK.map(c => 'ch' + c.n)];
+  const cur = tab || LS.get('hofTab', 'free-easy');
+  quizBody.innerHTML = `<div class="wrap">
+    <div class="qz-sec"><h3>자유 퀴즈 · 10문제</h3><div class="lv">${Object.entries(LEVELS).map(([k, v]) => `<button data-lv="${k}"><b>${v.t}</b><small>${v.d}<br>최고 ${bestOf('free-' + k) ?? '-'}점</small></button>`).join('')}</div></div>
+    <div class="qz-sec"><h3>장 퀴즈 · 5문제</h3><div class="chq">${BOOK.map(c => `<button data-ch="${c.n}">${c.n}장 ${esc(c.t)}<small>최고 ${bestOf('ch' + c.n) ?? '-'}점</small></button>`).join('')}</div></div>
+    <div class="qz-sec"><h3>명예의 전당</h3><div class="hof"><div class="tabs">${tabs.map(k => `<button data-tab="${k}" class="${k === cur ? 'on' : ''}">${k.startsWith('ch') ? k.slice(2) + '장' : LEVELS[k.slice(5)].t}</button>`).join('')}</div>${hofList(cur)}</div></div>
+  </div>`;
+  quizBody.querySelectorAll('[data-lv]').forEach(b => b.onclick = () => startQuiz({kind:'free', lv:b.dataset.lv}));
+  quizBody.querySelectorAll('[data-ch]').forEach(b => b.onclick = () => startQuiz({kind:'ch', n:+b.dataset.ch}));
+  quizBody.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { LS.set('hofTab', b.dataset.tab); const st = quizBody.scrollTop; drawQuizHome(b.dataset.tab); quizBody.scrollTop = st; });
+  const on = quizBody.querySelector('.tabs .on'); if(on) on.scrollIntoView({inline:'center', block:'nearest'});
+  quizBody.scrollTop = 0;
+}
+function hofList(mode, me){
+  const l = hofGet()[mode] || [];
+  if(!l.length) return `<div class="empty">${esc(MODE_NAME(mode))}에 아직 새겨진 이름이 없어요. 첫 번째 주인공이 되어 보세요!</div>`;
+  return `<ol>${l.map((r, i) => `<li class="${me && me === r.at ? 'me' : ''}"><span class="rk">${i + 1}</span><span class="nm">${esc(r.n)}</span><span class="sc">${r.s}점</span><span class="dt">${esc(r.d)}</span></li>`).join('')}</ol>`;
+}
+
+// 자유 퀴즈 문제 만들기
+const BOOK_IDS = [...new Set(BOOK.flatMap(c => c.b.filter(b => b.k === 'who').map(b => b.id)))];
+function poolFor(lv){
+  if(lv === 'easy') return BOOK_IDS.filter(id => P[id] && P[id].cat !== 'grp');
+  if(lv === 'normal') return D.people.filter(p => p.cat !== 'grp' && (BOOK_IDS.includes(p.id) || degree(p.id) >= 6)).map(p => p.id);
+  return D.people.filter(p => p.cat !== 'grp').map(p => p.id);
+}
+const REL = {
+  par: id => parentsOf(id, false),
+  chi: id => childrenOf(id, false),
+  spo: id => ADJ[id].filter(e => e.t === 'S' && !e.v).map(e => e.a === id ? e.b : e.a),
+  won: id => ADJ[id].filter(e => e.t === 'K' && !e.v && e.b === id).map(e => e.a), // id를 물리친 자
+  sib: id => { const ps = parentsOf(id, false); const s = new Set(); ps.forEach(p => childrenOf(p, false).forEach(c => { if(c !== id) s.add(c); })); return [...s]; }
+};
+function firstLine(id){
+  const st = ST[id];
+  const t = st && st.s && st.s[0] ? st.s[0][1] : P[id].ep;
+  const m = t.match(/^.*?[.!?요](?=\s|$)/);
+  return m ? m[0] : t;
+}
+function withName(id){ const t = firstLine(id); const b = P[id].ko.replace(/\(.*?\)/g, '').trim(); return t.includes(b) ? t : `${P[id].ko}: ${t}`; }
+function distract(ans, pool, bad, n = 3, otherCat = false){
+  const a = P[ans];
+  const badSet = new Set([ans, ...bad]);
+  const namesUsed = new Set([a.ko]);
+  const same = otherCat ? [] : shuffle(pool.filter(id => !badSet.has(id) && P[id].cat === a.cat));
+  const other = shuffle(pool.filter(id => !badSet.has(id) && P[id].cat !== a.cat));
+  const out = [];
+  for(const id of [...same, ...other]){ if(out.length >= n) break; if(namesUsed.has(P[id].ko)) continue; namesUsed.add(P[id].ko); out.push(id); }
+  return out;
+}
+function mkQ(lv, pool, usedIds){
+  const types = lv === 'easy' ? ['face','face','sym','par','chi','dom'] : lv === 'normal' ? ['face','sym','par','chi','dom','spo','won'] : ['face','sym','par','chi','dom','spo','won','sib'];
+  for(let tries = 0; tries < 60; tries++){
+    const ty = pickOne(types);
+    const id = pickOne(pool);
+    if(usedIds.has(id)) continue;
+    const p = P[id];
+    let q, ans, bad = [], img = null, e, showFaces = true, subj = id;
+    if(ty === 'face'){
+      q = '이 초상화의 주인공은 누구일까요?'; ans = id; img = id; showFaces = false;
+      e = withName(id);
+    } else if(ty === 'sym'){
+      if(!p.sym || !p.sym.length) continue;
+      const s = pickOne(p.sym);
+      bad = D.people.filter(x => (x.sym || []).includes(s)).map(x => x.id);
+      if(bad.length > 2) continue;
+      q = `「${s}」${hasJong(s) ? '이' : '가'} 상징인 인물은 누구일까요?`; ans = id;
+      e = `${p.ko}의 상징은 ${p.sym.join(', ')}${hasJong(p.sym[p.sym.length - 1]) ? '이에요' : '예요'}. ${firstLine(id)}`;
+    } else if(ty === 'dom'){
+      if(!p.dom) continue;
+      bad = D.people.filter(x => x.dom === p.dom).map(x => x.id);
+      q = `「${p.dom}」, 누구일까요?`; ans = id;
+      e = withName(id);
+    } else {
+      const list = REL[ty](id).filter(x => P[x] && P[x].cat !== 'grp');
+      const inPool = list.filter(x => pool.includes(x) || lv === 'hard');
+      if(!inPool.length) continue;
+      ans = pickOne(inPool); bad = list;
+      const who = p.ko;
+      if(ty === 'par') q = `${josa(who, '의', '의')} 부모 가운데 한 명은 누구일까요?`, e = `${who}의 부모: ${list.map(nm).join(', ')}.`;
+      if(ty === 'chi') q = `${who}의 자녀는 누구일까요?`, e = `${who}의 자녀로는 ${list.slice(0, 6).map(nm).join(', ')}${list.length > 6 ? ' 등이' : (hasJong(nm(list[Math.min(list.length, 6) - 1])) ? '이' : '가')} 있어요.`;
+      if(ty === 'spo') q = `${who}의 배우자는 누구일까요?`, e = `${who}의 배우자: ${list.map(nm).join(', ')}.`;
+      if(ty === 'won') q = `${josa(who, '과', '와')} 싸워 이긴 인물은 누구일까요?`, e = `${josa(who, '을', '를')} 물리친 인물: ${list.map(nm).join(', ')}.`;
+      if(ty === 'sib') q = `${who}의 형제자매는 누구일까요?`, e = `${who}의 형제자매로는 ${list.slice(0, 6).map(nm).join(', ')}${list.length > 6 ? ' 등이' : (hasJong(nm(list[Math.min(list.length, 6) - 1])) ? '이' : '가')} 있어요.`;
+      e += ' ' + firstLine(ans);
+    }
+    const ds = distract(ans, pool.length > 20 ? pool : D.people.map(x => x.id), bad, 3, ty === 'dom');
+    if(ds.length < 3) continue;
+    usedIds.add(id); usedIds.add(ans);
+    const opts = shuffle([ans, ...ds]);
+    return {q, o:opts.map(nm), ids:opts, a:opts.indexOf(ans), e, img, faces:showFaces, subj};
+  }
+  return null;
+}
+function startQuiz(cfg){
+  let qs;
+  if(cfg.kind === 'ch'){
+    const ch = BOOK[cfg.n - 1];
+    const idx = new Map(D.people.map(p => [p.ko, p.id]));
+    const sc = shuffle(ch.b.filter(b => b.k === 'img').map(b => b.i));
+    qs = shuffle(ch.q.map(x => ({...x}))).map((x, k) => {
+      const ids = x.o.map(o => idx.get(o) || null);
+      const order = shuffle([0, 1, 2, 3]);
+      return {q:x.q, o:order.map(i => x.o[i]), ids:order.map(i => ids[i]), a:order.indexOf(x.a), e:x.e, scene:sc[k % sc.length], faces:true};
+    });
+    quiz = {mode:'ch' + cfg.n, cfg, qs, i:0, score:0, combo:0, res:[], mul:1, per:20};
+  } else {
+    const pool = poolFor(cfg.lv); const used = new Set(); qs = [];
+    while(qs.length < 10){ const q = mkQ(cfg.lv, pool, used); if(!q) break; qs.push(q); }
+    quiz = {mode:'free-' + cfg.lv, cfg, qs, i:0, score:0, combo:0, res:[], mul:LEVELS[cfg.lv].mul, per:10};
+  }
+  ovBook.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); hideBackPill();
+  drawQ();
+}
+const PRAISE = ['정답이에요!', '딩동댕!', '대단해요!', '척척박사네요!', '완벽해요!', '신들도 깜짝 놀라겠어요!'];
+const OOPS = ['아쉬워요!', '괜찮아요, 다음엔 맞힐 거예요!', '앗, 헷갈렸죠?', '다음 문제는 꼭 맞혀 봐요!'];
+function drawQ(){
+  const z = quiz, x = z.qs[z.i];
+  $('#quizTitle').textContent = MODE_NAME(z.mode);
+  const w = document.createElement('div'); w.className = 'wrap qp';
+  w.innerHTML = `<div class="top"><div class="dots">${z.qs.map((_, k) => `<i class="${k < z.i ? (z.res[k] ? 'ok' : 'no') : k === z.i ? 'cur' : ''}"></i>`).join('')}</div>${z.combo >= 2 ? `<span class="combo">${z.combo}연속!</span>` : ''}<span class="score">${z.score}점</span></div>`;
+  if(x.img){ const d = document.createElement('div'); d.className = 'qimg'; d.innerHTML = avHTML(P[x.img], 220); w.appendChild(d); }
+  else if(x.scene != null) w.appendChild(sceneFigure(BOOK[z.cfg.n - 1], x.scene, {max:4}));
+  const q = document.createElement('div'); q.className = 'q'; q.textContent = `${z.i + 1}. ${x.q}`; w.appendChild(q);
+  const ops = document.createElement('div'); ops.className = 'opts';
+  ops.innerHTML = x.o.map((o, k) => `<button data-k="${k}">${x.faces && x.ids[k] && P[x.ids[k]] ? avHTML(P[x.ids[k]], 40) : `<span class="n">${k + 1}</span>`}<span>${esc(o)}</span></button>`).join('');
+  w.appendChild(ops);
+  if(x.picked != null) showFb(w, x);
+  quizBody.innerHTML = ''; quizBody.appendChild(w);
+  hydrateAv(w);
+  if(x.picked == null) ops.querySelectorAll('button').forEach(b => b.onclick = () => answer(+b.dataset.k));
+  else ops.querySelectorAll('button').forEach(b => b.disabled = true);
+  quizBody.scrollTop = 0;
+}
+function answer(k){
+  const z = quiz, x = z.qs[z.i];
+  if(x.picked != null) return;
+  x.picked = k;
+  const ok = k === x.a;
+  z.res[z.i] = ok;
+  if(ok){ z.combo++; z.score += z.per * z.mul + (z.combo >= 3 ? 5 * z.mul : 0); } else z.combo = 0;
+  x.msg = ok ? pickOne(PRAISE) : pickOne(OOPS);
+  const st = quizBody.scrollTop; drawQ(); quizBody.scrollTop = st;
+  const fb = quizBody.querySelector('.fb'); if(fb) fb.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function showFb(w, x){
+  const ok = x.picked === x.a;
+  w.querySelectorAll('.opts button').forEach((b, k) => { if(k === x.a) b.classList.add('ok'); else if(k === x.picked) b.classList.add('no'); });
+  const fb = document.createElement('div'); fb.className = 'fb' + (ok ? '' : ' no');
+  fb.innerHTML = `<b>${esc(x.msg)}</b>${ok ? '' : `정답은 「${esc(x.o[x.a])}」예요. `}${linkBook(x.e, new Set())}`;
+  w.appendChild(fb);
+  const nx = document.createElement('button'); nx.className = 'pillbtn navy next';
+  const last = quiz.i === quiz.qs.length - 1;
+  nx.textContent = last ? '결과 보기' : '다음 문제';
+  nx.onclick = () => { if(last) finish(); else { quiz.i++; drawQ(); } };
+  w.appendChild(nx);
+  wireLinks(fb, 'quiz');
+}
+function finish(){
+  const z = quiz; z.over = true;
+  const right = z.res.filter(Boolean).length, n = z.qs.length;
+  const msg = right === n ? '만점! 신화 박사 인정!' : right >= n * 0.8 ? '아주 잘했어요!' : right >= n * 0.5 ? '좋아요, 조금만 더!' : '이야기책을 한 번 더 읽어 볼까요?';
+  const star = z.mode.startsWith('ch') ? (BOOK[z.cfg.n - 1].b.find(b => b.k === 'who') || {}).id : z.qs[0].ids[z.qs[0].a];
+  const w = document.createElement('div'); w.className = 'wrap qr';
+  const lastName = LS.get('lastName', '');
+  const wrong = z.qs.map((x, k) => z.res[k] ? '' : `<div><b>${esc(x.q)}</b><br>정답: ${esc(x.o[x.a])}</div>`).join('');
+  w.innerHTML = `${star && P[star] ? `<div class="stamp">${avHTML(P[star], 200)}</div>` : ''}<div class="big">${z.score}점</div><div class="msg">${n}문제 중 ${right}문제 정답 · ${msg}</div>
+    <form id="hofForm"><input id="hofName" maxlength="10" placeholder="이름을 새겨 주세요" value="${esc(lastName)}" autocomplete="off"><button class="pillbtn navy" type="submit">이름 새기기</button></form>
+    <div id="hofBox"></div>
+    <div class="row"><button class="pillbtn pri" id="qAgain">다시 풀기</button>${z.mode.startsWith('ch') && z.cfg.n < BOOK.length ? `<button class="pillbtn" id="qNextCh">${z.cfg.n + 1}장 읽으러 가기</button>` : ''}<button class="pillbtn" id="qHome">퀴즈 처음으로</button></div>
+    ${wrong ? `<div class="wrong"><h4>틀린 문제 다시 보기</h4>${wrong}</div>` : ''}`;
+  quizBody.innerHTML = ''; quizBody.appendChild(w); hydrateAv(w); quizBody.scrollTop = 0;
+  $('#hofBox').innerHTML = `<div class="hof">${hofList(z.mode)}</div>`;
+  $('#hofForm').onsubmit = e => {
+    e.preventDefault();
+    const name = $('#hofName').value.trim().slice(0, 10) || '이름 없는 영웅';
+    LS.set('lastName', name);
+    const hof = hofGet(); const l = hof[z.mode] || [];
+    const d = new Date(); const at = Date.now();
+    l.push({n:name, s:z.score, d:`${d.getMonth() + 1}/${d.getDate()}`, at});
+    l.sort((a, b) => b.s - a.s || a.at - b.at); hof[z.mode] = l.slice(0, 10); LS.set('hof', hof);
+    $('#hofForm').outerHTML = hof[z.mode].some(r => r.at === at) ? `<p class="msg">명예의 전당에 「${esc(name)}」 이름이 새겨졌어요!</p>` : `<p class="msg">아쉽게 10위 안에 들지 못했어요. 다시 도전해 봐요!</p>`;
+    $('#hofBox').innerHTML = `<div class="hof">${hofList(z.mode, at)}</div>`;
+    LS.set('hofTab', z.mode);
+  };
+  $('#qAgain').onclick = () => startQuiz(z.cfg);
+  $('#qHome').onclick = () => drawQuizHome(z.mode);
+  if($('#qNextCh')) $('#qNextCh').onclick = () => { quiz = null; openBook(z.cfg.n + 1); };
+}
+$('#quizClose').onclick = closeToGraph;
+$('#quizHomeBtn').onclick = () => drawQuizHome();
+$('#btnBook').onclick = () => openBook();
+$('#btnQuiz').onclick = () => openQuiz();
+$('#wBook').onclick = () => openBook();
+$('#wQuiz').onclick = () => openQuiz();
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && (ovBook.classList.contains('on') || ovQuiz.classList.contains('on'))) closeToGraph(); });
+
 /* ---------- 시작 ---------- */
 const FEAT = ['zeus','heracles','athena','medusa','achilles','odysseus','poseidon','perseus','hades','persephone','oedipus','cerberus'];
 $('#feat').innerHTML = FEAT.map(id => `<button data-go="${id}">${avHTML(P[id], 30)}${esc(P[id].ko)}</button>`).join('');
@@ -965,6 +1450,8 @@ $('#feat').querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dat
 wireAssets(document);
 const start = decodeURIComponent(location.hash.slice(1));
 if(P[start]) go(start, false);
+else if(start === 'book') openBook();
+else if(start === 'quiz') openQuiz();
 })();
 </script>
 </body>
