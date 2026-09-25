@@ -149,6 +149,13 @@ main.nopanel .zoom{display:none}
   background:var(--white);border:1.5px solid var(--ink);border-radius:var(--radius);padding:14px 15px;line-height:1.7;font-size:15px;
   position:relative;box-shadow:0 3px 0 rgba(58,55,57,.1)
 }
+.ep h4{margin:14px 0 4px;font-family:var(--hand);font-weight:400;font-size:21px;color:var(--navy);line-height:1.2}
+.ep h4:first-child{margin-top:4px}
+.ep p{margin:0}
+.ep .sl{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--wood);text-underline-offset:3px;cursor:pointer}
+.ep .sl:hover{background:var(--gold)}
+.fact{margin-top:14px;background:var(--gold);border:1.5px dashed var(--wood);border-radius:14px;padding:10px 12px;font-size:14.5px;line-height:1.65}
+.fact b{display:block;font-family:var(--hand);font-weight:400;font-size:19px;color:var(--navy)}
 .ep::before{content:"이야기";position:absolute;top:-12px;left:14px;background:var(--salmon);border:1.5px solid var(--ink);border-radius:10px;padding:0 10px;font-family:var(--hand);font-size:18px;line-height:22px}
 .aka{font-size:12.5px;color:var(--muted);margin-top:10px}
 .rels{margin-top:18px}
@@ -281,10 +288,12 @@ main.nopanel .zoom{display:none}
 </div>
 <div class="tip" id="tip"></div>
 <script src="data.js"></script>
+<script src="stories.js"></script>
 <script>
 (function(){
 'use strict';
 const D = window.MYTH;
+const ST = window.STORIES || {};
 const P = {}; D.people.forEach(p => P[p.id] = p);
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -762,7 +771,7 @@ function renderPanel(id, nb){
     </div>
     <div class="dom">${esc(p.dom)}</div>
     ${p.sym.length ? `<div class="syms">${p.sym.map(s => `<span>${esc(s)}</span>`).join('')}</div>` : ''}
-    <div class="ep">${esc(p.ep)}</div>
+    <div class="ep">${storyHTML(p)}</div>
     ${p.al.length ? `<div class="aka">다른 이름 · ${p.al.map(esc).join(', ')}</div>` : ''}
     <div class="rels">${relHTML || '<p class="note">표시할 관계가 없어요.</p>'}</div>
     ${!state.withV && hidden ? `<p class="note">출처마다 다른 전승(이설)이 ${hidden}개 더 있어요. 관계도 위 '이설 보기'를 눌러 보세요.</p>` : ''}
@@ -811,6 +820,52 @@ function renderPanel(id, nb){
   panel.addEventListener('pointercancel', end);
   window.addEventListener('resize', () => { if(innerWidth > 900){ panel.style.height = ''; panel.classList.remove('min','max','short'); } });
 })();
+/* ---------- 긴 이야기 ---------- */
+const NAME_IDX = (() => {
+  const m = new Map(), dup = new Set();
+  const put = (n, id) => { if(n.length < 2) return; if(m.has(n) && m.get(n) !== id){ dup.add(n); return; } m.set(n, id); };
+  D.people.forEach(p => put(p.ko, p.id));
+  const bases = {};
+  D.people.forEach(p => { const b = p.ko.replace(/\(.*?\)/g, '').trim(); if(b !== p.ko) (bases[b] = bases[b] || []).push(p.id); });
+  Object.entries(bases).forEach(([b, list]) => { if(list.length === 1 && !m.has(b)) put(b, list[0]); else dup.add(b); });
+  ['아테'].forEach(n => dup.add(n));
+  dup.forEach(n => m.delete(n));
+  const byFirst = {};
+  [...m.keys()].sort((a, b) => b.length - a.length).forEach(n => (byFirst[n[0]] = byFirst[n[0]] || []).push(n));
+  return {m, byFirst};
+})();
+const PARTICLE = '은는이가을를의와과도로에만께한처보부까조랑야요라며나였인지예죠들';
+const isHan = c => c && /[가-힣]/.test(c);
+function linkify(text, self, used){
+  let out = '', i = 0;
+  while(i < text.length){
+    const c = text[i];
+    let hit = null;
+    if(!isHan(text[i - 1]) && NAME_IDX.byFirst[c]){
+      for(const n of NAME_IDX.byFirst[c]){
+        if(text.startsWith(n, i)){
+          const nx = text[i + n.length];
+          if(!isHan(nx) || PARTICLE.includes(nx)){ hit = n; }
+          break;
+        }
+      }
+    }
+    if(hit){
+      const id = NAME_IDX.m.get(hit);
+      if(id !== self && !used.has(id)){ used.add(id); out += `<button class="sl" data-go="${id}">${esc(hit)}</button>`; }
+      else out += esc(hit);
+      i += hit.length;
+    } else { out += esc(c); i++; }
+  }
+  return out;
+}
+function storyHTML(p){
+  const st = ST[p.id];
+  if(!st) return esc(p.ep);
+  const used = new Set();
+  return st.s.map(([t, b]) => (t ? `<h4>${esc(t)}</h4>` : '') + `<p>${linkify(b, p.id, used)}</p>`).join('') +
+    (st.f ? `<div class="fact"><b>알고 있었니?</b>${linkify(st.f, p.id, used)}</div>` : '');
+}
 function renderPanelKeep(id, nb){ const st = panel.scrollTop, cls = panel.className; renderPanel(id, nb); panel.className = cls; panel.scrollTop = st; }
 function openPanel(){ panel.classList.remove('hidden', 'min'); }
 
