@@ -380,13 +380,14 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
   .brand h1{font-size:21px}
 }
 @media (max-width:520px){
-  header .ibtn{padding:0;width:44px;min-width:44px;height:44px}
+  header .ibtn{padding:0;width:38px;min-width:38px;height:38px}
+  header .hbtns{gap:4px}
   header{gap:6px}
   .brand h1{font-size:19px}
   .backpill{top:196px;left:12px;transform:none;padding:8px 14px;font-size:14px}
 }
 @media (max-width:900px){ .brand{min-width:0;flex:1} .brand>span:last-child{min-width:0} .brand h1{overflow:hidden;text-overflow:ellipsis} .hbtns{flex-shrink:0;margin-left:auto} }
-@media (max-width:420px){ .brand h1{font-size:17px} .brand .logo{width:30px;height:30px} }
+@media (max-width:480px){ .brand h1{font-size:18px;letter-spacing:0} .brand .logo{width:30px;height:30px} header .ibtn{width:36px;min-width:36px;height:36px} header .ibtn svg,header .ibtn img{width:17px;height:17px} }
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* 타임라인 */
@@ -404,19 +405,21 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 .tl-era .no{font-size:13px;color:var(--muted)}
 .tl-era h4{margin:0;font-family:var(--brush);font-weight:400;font-size:30px;line-height:1.1;color:var(--navy)}
 .tl-era p{margin:4px 0 0;font-size:15px;color:#4a4543}
-.tl-ev{position:relative;display:grid;grid-template-columns:128px 1fr;gap:12px;margin:12px 0;padding:10px;border:1.5px solid var(--ink);border-radius:16px;background:var(--white);box-shadow:0 3px 0 rgba(58,55,57,.08)}
-.tl-ev::before{content:"";position:absolute;left:-24px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--tint);border:1.5px solid var(--ink)}
-.tl-ev .pic{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;display:grid;place-items:center;align-self:start}
+.tl-ev{position:relative;display:grid;grid-template-columns:132px 1fr;column-gap:12px;row-gap:8px;margin:12px 0;padding:12px;border:1.5px solid var(--ink);border-radius:16px;background:var(--white);box-shadow:0 3px 0 rgba(58,55,57,.08)}
+.tl-ev::before{content:"";position:absolute;left:-24px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--tint);border:1.5px solid var(--ink)}
+.tl-ev .ttl{grid-column:1/-1;display:block;font-size:17px;line-height:1.3}
+.tl-ev .l{display:flex;flex-direction:column;gap:2px;min-width:0}
+.tl-ev .pic{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;display:grid;place-items:center}
 .tl-ev .pic img.scn{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
 .tl-ev .pic .faces{display:flex;justify-content:center;flex-wrap:wrap;padding:4px}
 .tl-ev .pic .faces .av{width:44px;height:44px;margin:0 -5px;border:2px solid var(--white)}
-.tl-ev b{display:block;font-size:17px;line-height:1.3}
-.tl-ev .d{margin:4px 0 0;font-size:14.5px;line-height:1.55;color:#4a4543}
+.tl-ev .rd{border:0;background:none;padding:6px 0;min-height:36px;font-size:13.5px;color:var(--navy);text-decoration:underline;text-underline-offset:3px;text-align:left;line-height:1.3}
+.tl-ev .r{min-width:0}
+.tl-ev .d{margin:0;font-size:14.5px;line-height:1.55;color:#4a4543}
 .tl-ev .gen{display:inline-block;margin-top:6px;font-size:12.5px;padding:2px 9px;border-radius:10px;background:var(--lav);border:1px solid var(--lav-d)}
-.tl-ev .tl-who{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;align-items:center}
-.tl-ev .tl-who button{border:0;background:none;padding:0;width:44px;height:44px;display:grid;place-items:center;border-radius:50%}
+.tl-ev .tl-who{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:2px;align-items:center;padding-top:8px;border-top:1px dashed var(--line)}
+.tl-ev .tl-who button{border:0;background:none;padding:0;width:40px;height:40px;display:grid;place-items:center;border-radius:50%}
 .tl-ev .tl-who .av{width:36px;height:36px}
-.tl-ev .rd{margin-top:6px;border:0;background:none;padding:6px 0;min-height:36px;font-size:14px;color:var(--navy);text-decoration:underline;text-underline-offset:3px}
 .tl-lad{margin:14px 0;padding:12px;border:1.5px dashed var(--ink);border-radius:16px;background:rgba(255,248,220,.7)}
 .tl-lad h5{margin:0 0 4px;font-size:15px}
 .tl-lad p{margin:0 0 8px;font-size:13px;color:var(--muted)}
@@ -425,8 +428,8 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 .tl-lad .step{display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:0;min-width:64px;font-size:12px;white-space:nowrap;flex-shrink:0}
 .tl-lad .step .av{width:40px;height:40px}
 .tl-lad .arr{align-self:center;color:var(--muted);font-size:13px;margin-top:-14px;flex-shrink:0}
-@media (min-width:700px){ .tl-ev{grid-template-columns:220px 1fr;padding:12px} .tl-ev b{font-size:19px} .tl-ev .d{font-size:15.5px} }
-@media (max-width:380px){ .tl-ev{grid-template-columns:1fr} }
+@media (min-width:700px){ .tl-ev{grid-template-columns:240px 1fr;padding:14px} .tl-ev .ttl{font-size:19px} .tl-ev .d{font-size:15.5px} }
+@media (max-width:380px){ .tl-ev{grid-template-columns:112px 1fr} .tl-ev .d{font-size:14px} }
 </style>
 <script>window.goatcounter = {no_onload: true};</script>
 <script data-goatcounter="https://kaylastudio.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
@@ -1733,10 +1736,10 @@ function buildTime(){
       const who = ev.who.filter(id => P[id]);
       const f = ev.img ? `images/scenes/${ev.img}.png` : '';
       const tint = er.tint;
-      html += `<article class="tl-ev" style="--tint:${tint}"><div class="pic" ${f ? `data-f="${f}"` : ''} style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 80%)"><div class="faces">${who.slice(0, 3).map(id => avHTML(P[id], 44)).join('')}</div></div>
-        <div><b>${esc(ev.t)}</b><p class="d">${esc(ev.d)}</p>${ev.gen ? `<span class="gen">세대 · ${esc(ev.gen)}</span>` : ''}
-        <div class="tl-who">${who.slice(0, 7).map(id => `<button data-go="${id}" title="${esc(P[id].ko)}" aria-label="${esc(P[id].ko)} 보기">${avHTML(P[id], 36)}</button>`).join('')}</div>
-        ${ev.ch ? `<button class="rd" data-ch="${ev.ch}">이야기책 ${ev.ch}장에서 읽기 ›</button>` : ''}</div></article>`;
+      html += `<article class="tl-ev" style="--tint:${tint}"><b class="ttl">${esc(ev.t)}</b>
+        <div class="l"><div class="pic" ${f ? `data-f="${f}"` : ''} style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 80%)"><div class="faces">${who.slice(0, 3).map(id => avHTML(P[id], 44)).join('')}</div></div>${ev.ch ? `<button class="rd" data-ch="${ev.ch}">이야기책 ${ev.ch}장에서 읽기 ›</button>` : ''}</div>
+        <div class="r"><p class="d">${esc(ev.d)}</p>${ev.gen ? `<span class="gen">세대 · ${esc(ev.gen)}</span>` : ''}</div>
+        <div class="tl-who">${who.slice(0, 8).map(id => `<button data-go="${id}" title="${esc(P[id].ko)}" aria-label="${esc(P[id].ko)} 보기">${avHTML(P[id], 36)}</button>`).join('')}</div></article>`;
     });
   });
   html += `</div></div>`;
