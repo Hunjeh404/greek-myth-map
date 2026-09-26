@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=overlays-content">
 <title>그리스 신화 관계도</title>
 <meta name="description" content="그리스 신화의 신·영웅·괴물을 검색하고 관계도로 탐색하는 앱">
 <meta name="color-scheme" content="light">
@@ -1117,7 +1117,29 @@ qi.addEventListener('focus', drawSuggest);
 function pinTop(){ if(window.scrollY || document.documentElement.scrollTop || document.body.scrollTop){ window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } }
 qi.addEventListener('focus', () => { pinTop(); setTimeout(pinTop, 150); setTimeout(pinTop, 400); });
 window.addEventListener('scroll', pinTop, {passive:true});
-if(window.visualViewport){ visualViewport.addEventListener('resize', pinTop); visualViewport.addEventListener('scroll', () => { if(document.activeElement === qi) pinTop(); }); }
+// 키보드가 화면을 덮는 동안 추천 목록이 키보드 뒤로 숨지 않게 높이 맞추기
+function fitSuggest(){
+  const vv = window.visualViewport; if(!vv) return;
+  const top = sgBox.getBoundingClientRect().top;
+  sgBox.style.maxHeight = Math.max(120, Math.min(560, vv.height + vv.offsetTop - top - 12)) + 'px';
+}
+if(window.visualViewport){
+  visualViewport.addEventListener('resize', () => { pinTop(); fitSuggest(); });
+  visualViewport.addEventListener('scroll', () => { if(document.activeElement === qi) pinTop(); });
+}
+qi.addEventListener('input', fitSuggest);
+// 문제 확인용: 주소 끝에 ?debug 를 붙이면 화면 상태를 작게 표시
+if(/[?&]debug/.test(location.search)){
+  const dbg = document.createElement('div');
+  dbg.style.cssText = 'position:fixed;left:4px;top:42%;z-index:999;background:rgba(0,0,0,.75);color:#fff;font:11px/1.35 monospace;padding:4px 6px;border-radius:6px;pointer-events:none;white-space:pre';
+  document.body.appendChild(dbg);
+  const upd = () => {
+    const vv = window.visualViewport || {}, h = document.querySelector('header').getBoundingClientRect(), a = document.querySelector('.app').getBoundingClientRect();
+    dbg.textContent = `inner ${innerWidth}x${innerHeight} vv ${Math.round(vv.width)}x${Math.round(vv.height)} off ${Math.round(vv.offsetTop)}\nscrollY ${scrollY} body ${document.body.scrollTop} app ${Math.round(a.top)}/${Math.round(a.height)}\nheader ${Math.round(h.top)}/${Math.round(h.height)} focus ${document.activeElement && document.activeElement.id}`;
+    requestAnimationFrame(upd);
+  };
+  upd();
+}
 qi.addEventListener('blur', () => setTimeout(() => sgBox.classList.remove('on'), 120));
 qi.addEventListener('keydown', e => {
   if(e.isComposing && (e.key === 'Enter')) return;
