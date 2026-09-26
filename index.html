@@ -737,8 +737,17 @@ function layout(center, nb){
     const half = byG.sib.filter(n => !full.includes(n));
     const keep = full.concat(half).slice(0, SIB_LIMIT - 1);
     const rest = byG.sib.length - keep.length;
-    byG.sib = keep.concat([{id:'__more_sib', more:rest, main:'sib', tags:[{g:'sib', label:`+${rest}명`}]}]);
+    byG.sib = keep.concat([{id:'__more_sib', more:rest, moreG:'sib', main:'sib', tags:[{g:'sib', label:`+${rest}명`}]}]);
   }
+  // 연결이 아주 많은 인물(제우스 등)은 큰 묶음을 접어서 한 번에 그리는 양을 줄임 (휴대폰에서 화면 일부가 비는 문제 방지)
+  const NODE_BUDGET = 48, GROUP_LIMIT = 10;
+  let count = GROUPS.reduce((s, g) => s + byG[g.k].length, 0);
+  GROUPS.map(g => g.k).filter(k => k !== 'sib').sort((a, b) => byG[b].length - byG[a].length).forEach(k => {
+    if(count <= NODE_BUDGET || byG[k].length <= GROUP_LIMIT || state.expanded.has(k)) return;
+    const keep = byG[k].slice(0, GROUP_LIMIT - 1), rest = byG[k].length - keep.length;
+    byG[k] = keep.concat([{id:'__more_' + k, more:rest, moreG:k, main:k, tags:[{g:k, label:`+${rest}`}]}]);
+    count -= rest - 1;
+  });
   const active = GROUPS.filter(g => byG[g.k].length);
   const total = active.reduce((s, g) => s + byG[g.k].length, 0);
   const nodes = [];
@@ -837,9 +846,10 @@ function render(id, fresh = true){
     const mx = o.x * 0.5 + Math.cos(o.a + Math.PI/2) * 18, my = o.y * 0.5 + Math.sin(o.a + Math.PI/2) * 18;
     const path = mk('path', {d:`M0,0 Q${mx},${my} ${o.x},${o.y}`, class:'edge' + (o.n.allV ? ' v' : ''), stroke:col, 'data-id':o.n.id, style:`animation-delay:${i*12}ms`}, eg);
     if(o.n.more){
-      const el = nodeEl(ng, null, o.x, o.y, 28, {more:true, label:`+${o.n.more}`, aria:`이복형제 ${o.n.more}명 더 보기`, delay:i*12});
-      el.addEventListener('click', () => { state.expanded.add('sib'); render(id, false); });
-      onKey(el, () => { state.expanded.add('sib'); render(id, false); });
+      const mg = o.n.moreG || 'sib';
+      const el = nodeEl(ng, null, o.x, o.y, 28, {more:true, label:`+${o.n.more}`, aria:`${mg === 'sib' ? '이복형제' : GC[mg].ko} ${o.n.more}개 더 보기`, delay:i*12});
+      el.addEventListener('click', () => { state.expanded.add(mg); render(id, false); });
+      onKey(el, () => { state.expanded.add(mg); render(id, false); });
       return;
     }
     const q = P[o.n.id];
