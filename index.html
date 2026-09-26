@@ -468,7 +468,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ---------- 색·라벨 ---------- */
-const CAT_COLOR = {pri:'#DCCFE5',tit:'#C7B890',oly:'#F0DEAA',god:'#BDCFE0',nym:'#C7E1D7',her:'#F1C7A4',mor:'#EDE7D6',mon:'#B6B1C4',grp:'#C8CCD6'};
+const CAT_COLOR = {pri:'#DCCFE5',tit:'#C7B890',oly:'#F0DEAA',god:'#BDCFE0',nym:'#C7E1D7',her:'#F1C7A4',mor:'#EDE7D6',mon:'#B6B1C4',grp:'#C8CCD6',art:'#EFCB6E'};
 // 관계 그룹: 표시 순서 = 원 위 배치 순서(12시부터 시계방향)
 const GROUPS = [
   {k:'parent', ko:'부모', color:'#6F8FB0'},
@@ -478,6 +478,8 @@ const GROUPS = [
   {k:'child',  ko:'자녀', color:'#6FA38D'},
   {k:'member', ko:'소속·구성원', color:'#C9A94E'},
   {k:'bond',   ko:'인연', color:'#8F96A8'},
+  {k:'item',   ko:'보물·신물', color:'#C08A1E'},
+  {k:'holder', ko:'관련 인물', color:'#8C7A5B'},
   {k:'rival',  ko:'대립', color:'#B8876A'},
   {k:'kill',   ko:'죽임', color:'#2E3A57'},
 ];
@@ -669,6 +671,7 @@ function neighbors(id, withV){
       case 'F': put(o, 'rival', '대립', e.n, e.v); break;
       case 'O': put(o, 'bond', me ? (e.il || '인연') : (e.l || '인연'), e.n, e.v); break;
       case 'M': put(o, 'member', me ? '구성원' : '소속', e.n, e.v); break;
+      case 'T': put(o, me ? 'holder' : 'item', me ? (e.il || '관련 인물') : (e.l || '관련 물건'), e.n, e.v); break;
     }
   }
   // 형제자매 (부모 공유)
@@ -686,7 +689,7 @@ function neighbors(id, withV){
   for(const n of map.values()){
     // 주 그룹: 혈연/혼인을 우선
     n.tags.sort((a, b) => order.indexOf(a.g) - order.indexOf(b.g));
-    const pri = ['parent','child','spouse','lover','kill','sib','member','rival','bond'];
+    const pri = ['parent','child','spouse','lover','kill','sib','member','rival','bond','holder','item'];
     n.main = n.tags.slice().sort((a, b) => pri.indexOf(a.g) - pri.indexOf(b.g))[0].g;
     n.allV = n.tags.every(t => t.v);
   }
@@ -1129,7 +1132,7 @@ const modal = $('#modal');
 function drawList(){
   const f = $('#lq').value.trim();
   const hits = f ? new Set(search(f, 60).map(r => r.p.id)) : null;
-  const order = ['pri','tit','oly','god','nym','her','mor','mon','grp'];
+  const order = ['pri','tit','oly','god','nym','her','mor','mon','grp','art'];
   $('#mbody').innerHTML = order.map(c => {
     const list = D.people.filter(p => p.cat === c && (!hits || hits.has(p.id))).sort((a, b) => a.ko.localeCompare(b.ko, 'ko'));
     if(!list.length) return '';
@@ -1392,9 +1395,9 @@ function hofList(mode, me){
 // 자유 퀴즈 문제 만들기
 const BOOK_IDS = [...new Set(BOOK.flatMap(c => c.b.filter(b => b.k === 'who').map(b => b.id)))];
 function poolFor(lv){
-  if(lv === 'easy') return BOOK_IDS.filter(id => P[id] && P[id].cat !== 'grp');
-  if(lv === 'normal') return D.people.filter(p => p.cat !== 'grp' && (BOOK_IDS.includes(p.id) || degree(p.id) >= 6)).map(p => p.id);
-  return D.people.filter(p => p.cat !== 'grp').map(p => p.id);
+  if(lv === 'easy') return BOOK_IDS.filter(id => P[id] && P[id].cat !== 'grp' && P[id].cat !== 'art');
+  if(lv === 'normal') return D.people.filter(p => p.cat !== 'grp' && p.cat !== 'art' && (BOOK_IDS.includes(p.id) || degree(p.id) >= 6)).map(p => p.id);
+  return D.people.filter(p => p.cat !== 'grp' && p.cat !== 'art').map(p => p.id);
 }
 const REL = {
   par: id => parentsOf(id, false),
@@ -1444,7 +1447,7 @@ function mkQ(lv, pool, usedIds){
       q = `「${p.dom}」, 누구일까요?`; ans = id;
       e = withName(id);
     } else {
-      const list = REL[ty](id).filter(x => P[x] && P[x].cat !== 'grp');
+      const list = REL[ty](id).filter(x => P[x] && P[x].cat !== 'grp' && P[x].cat !== 'art');
       const inPool = list.filter(x => pool.includes(x) || lv === 'hard');
       if(!inPool.length) continue;
       ans = pickOne(inPool); bad = list;
@@ -1588,7 +1591,7 @@ function firstVisitTips(){
     const c = document.querySelector('#graph .node.center'); if(!c) return;
     showTip2('다른 인물을 누르면 그 인물이 가운데로 와요. 두 손가락으로 확대할 수 있어요.', c, 'below', () => {
       if(innerWidth <= 900){ const g = document.querySelector('.panel .grab'); if(g && !panel.classList.contains('hidden')) showTip2('아래 창을 위로 끌어 올리면 이 인물의 이야기를 읽을 수 있어요.', g, 'above'); }
-      else if(!panel.classList.contains('hidden')) showTip2('오른쪽에서 이 인물의 이야기와 관계를 읽을 수 있어요.', panel.querySelector('h2') || panel, 'below');
+      else if(!panel.classList.contains('hidden')) showTip2('오른쪽에서 이 인물의 이야기와 관계를 읽을 수 있어요.', panel, 'below');
     });
   }, 1200);
 }
