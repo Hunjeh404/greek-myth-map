@@ -1588,7 +1588,7 @@ function firstVisitTips(){
     const c = document.querySelector('#graph .node.center'); if(!c) return;
     showTip2('다른 인물을 누르면 그 인물이 가운데로 와요. 두 손가락으로 확대할 수 있어요.', c, 'below', () => {
       if(innerWidth <= 900){ const g = document.querySelector('.panel .grab'); if(g && !panel.classList.contains('hidden')) showTip2('아래 창을 위로 끌어 올리면 이 인물의 이야기를 읽을 수 있어요.', g, 'above'); }
-      else if(!panel.classList.contains('hidden')) showTip2('오른쪽에서 이 인물의 이야기와 관계를 읽을 수 있어요.', panel, 'below');
+      else if(!panel.classList.contains('hidden')) showTip2('오른쪽에서 이 인물의 이야기와 관계를 읽을 수 있어요.', panel.querySelector('h2') || panel, 'below');
     });
   }, 1200);
 }
