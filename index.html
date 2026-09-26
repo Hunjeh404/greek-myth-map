@@ -507,8 +507,26 @@ function wireAssets(root){
     probe(img.dataset.asset).then(ok => { if(ok){ img.src = img.dataset.asset; img.style.display = ''; if(fb) fb.style.display = 'none'; } });
   });
 }
-let FRAME_OK = false, catIcon = {};
-probe('images/ui/frame.png').then(ok => { FRAME_OK = ok; if(ok && state.cur) render(state.cur, false); });
+let FRAME_OK = false, catIcon = {}, FRAME_SRC = 'images/ui/frame.png';
+// 관계도용 작은 그림: 큰 초상(512px)을 그대로 수십 장 그리면 휴대폰 그래픽 메모리가 모자라 화면 일부가 비는 문제가 있어
+// 한 번 줄인 그림을 만들어 두고 관계도 둘레 인물에 씀
+const thumbs = new Map();
+function thumbOf(url, size){
+  const key = url + '@' + size;
+  if(!thumbs.has(key)) thumbs.set(key, (async () => {
+    try{
+      const i = new Image(); i.src = url; await i.decode();
+      const c = document.createElement('canvas'); c.width = c.height = size;
+      const x = c.getContext('2d'); x.imageSmoothingQuality = 'high';
+      const s = Math.min(i.naturalWidth, i.naturalHeight);
+      x.drawImage(i, (i.naturalWidth - s) / 2, (i.naturalHeight - s) / 2, s, s, 0, 0, size, size);
+      const b = await new Promise(res => c.toBlob(res, 'image/png'));
+      return b ? URL.createObjectURL(b) : url;
+    }catch(e){ return url; }
+  })());
+  return thumbs.get(key);
+}
+probe('images/ui/frame.png').then(ok => { FRAME_OK = ok; if(ok){ thumbOf('images/ui/frame.png', 256).then(u => { FRAME_SRC = u; document.querySelectorAll('#graph .node:not(.center) image[href="images/ui/frame.png"]').forEach(el => el.setAttribute('href', u)); }); if(state.cur) render(state.cur, false); } });
 Object.keys(CAT_COLOR).forEach(c => probe(`images/icons/cat-${c}.png`).then(ok => { if(ok) catIcon[c] = `images/icons/cat-${c}.png`; }));
 
 function initialOf(p){ return p.ko.replace(/\(.*\)/,'').trim().charAt(0); }
@@ -776,11 +794,12 @@ function nodeEl(parent, p, x, y, r, opts){
   const ini = mk('text', {'text-anchor':'middle', dy:'0.36em', style:`font-family:var(--hand);font-size:${Math.round(r*1.15)}px`, fill:'#3A3739'}, inner);
   ini.textContent = initialOf(p);
   const img = mk('image', {x:-r, y:-r, width:r*2, height:r*2, 'clip-path':'url(#cc)', preserveAspectRatio:'xMidYMid slice', style:'display:none'}, inner);
-  const setImg = u => { if(u){ img.setAttribute('href', u); img.style.display = ''; ini.style.display = 'none'; } };
+  const apply = u => { img.setAttribute('href', u); img.style.display = ''; ini.style.display = 'none'; };
+  const setImg = u => { if(!u) return; if(opts.center) apply(u); else thumbOf(u, 192).then(apply); };
   const cached = portraitUrl.get(p.id);
   if(typeof cached === 'string') setImg(cached); else if(cached !== null) findPortrait(p.id).then(setImg);
   mk('circle', {r, fill:'none', stroke:'#3A3739', 'stroke-width':opts.center ? 2.4 : 1.6}, inner);
-  if(FRAME_OK) mk('image', {href:'images/ui/frame.png', x:-r*1.28, y:-r*1.28, width:r*2.56, height:r*2.56, style:'pointer-events:none'}, inner);
+  if(FRAME_OK) mk('image', {href:opts.center ? 'images/ui/frame.png' : FRAME_SRC, x:-r*1.28, y:-r*1.28, width:r*2.56, height:r*2.56, style:'pointer-events:none'}, inner);
   if(catIcon[p.cat] && !opts.center) mk('image', {href:catIcon[p.cat], x:r*0.45, y:-r*1.05, width:r*0.7, height:r*0.7}, inner);
   const nm = mk('text', {'text-anchor':'middle', y:r + (opts.center ? 26 : 18), class:'nm'}, inner);
   nm.textContent = p.ko;
