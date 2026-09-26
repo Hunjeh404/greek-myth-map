@@ -29,7 +29,7 @@
   --brush:"Nanum Brush Script","Nanum Pen Script",cursive;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
 body{
   font-family:var(--font);color:var(--ink);
   background:url(images/ui/bg.png) repeat, var(--cream);
@@ -37,7 +37,7 @@ body{
   overflow:hidden; -webkit-tap-highlight-color:transparent;
 }
 button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
-.app{display:grid;grid-template-rows:auto 1fr;height:100%;height:100dvh}
+.app{display:grid;grid-template-rows:auto 1fr;position:fixed;top:0;left:0;right:0;height:100%;height:100dvh}
 
 /* 헤더 */
 header{
@@ -1113,6 +1113,11 @@ qi.addEventListener('compositionstart', () => composing = true);
 qi.addEventListener('compositionend', () => { composing = false; drawSuggest(); });
 qi.addEventListener('input', drawSuggest); // 조합 중에도 갱신(한글 입력 즉시 반응)
 qi.addEventListener('focus', drawSuggest);
+// 휴대폰 키보드가 올라올 때 브라우저가 화면 전체를 밀어 올려 검색창이 가려지는 것 막기
+function pinTop(){ if(window.scrollY || document.documentElement.scrollTop || document.body.scrollTop){ window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } }
+qi.addEventListener('focus', () => { pinTop(); setTimeout(pinTop, 150); setTimeout(pinTop, 400); });
+window.addEventListener('scroll', pinTop, {passive:true});
+if(window.visualViewport){ visualViewport.addEventListener('resize', pinTop); visualViewport.addEventListener('scroll', () => { if(document.activeElement === qi) pinTop(); }); }
 qi.addEventListener('blur', () => setTimeout(() => sgBox.classList.remove('on'), 120));
 qi.addEventListener('keydown', e => {
   if(e.isComposing && (e.key === 'Enter')) return;
