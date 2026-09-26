@@ -389,6 +389,44 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 @media (max-width:420px){ .brand h1{font-size:17px} .brand .logo{width:30px;height:30px} }
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* 타임라인 */
+.tl-nav{position:sticky;top:0;z-index:3;display:flex;gap:8px;overflow-x:auto;padding:10px 14px;background:rgba(251,246,232,.96);border-bottom:1.5px solid var(--line);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tl-nav::-webkit-scrollbar{display:none}
+.tl-nav button{flex-shrink:0;min-height:36px;border:1.5px solid var(--ink);border-radius:18px;padding:5px 12px;font-size:14px;background:var(--white)}
+.tl-nav button.on{background:var(--gold)}
+.tl-intro{text-align:center;margin:6px 0 10px}
+.tl-intro h3{font-family:var(--brush);font-weight:400;font-size:40px;margin:0;color:var(--navy)}
+.tl-intro p{margin:4px 0 0;color:var(--muted);font-size:15px}
+.tl{position:relative;padding-left:30px}
+.tl::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:3px;border-radius:2px;background:var(--navy);opacity:.35}
+.tl-era{position:relative;margin:30px 0 10px;scroll-margin-top:70px}
+.tl-era::before{content:"";position:absolute;left:-27px;top:6px;width:20px;height:20px;border-radius:50%;background:var(--tint);border:2px solid var(--ink)}
+.tl-era .no{font-size:13px;color:var(--muted)}
+.tl-era h4{margin:0;font-family:var(--brush);font-weight:400;font-size:30px;line-height:1.1;color:var(--navy)}
+.tl-era p{margin:4px 0 0;font-size:15px;color:#4a4543}
+.tl-ev{position:relative;display:grid;grid-template-columns:128px 1fr;gap:12px;margin:12px 0;padding:10px;border:1.5px solid var(--ink);border-radius:16px;background:var(--white);box-shadow:0 3px 0 rgba(58,55,57,.08)}
+.tl-ev::before{content:"";position:absolute;left:-24px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--tint);border:1.5px solid var(--ink)}
+.tl-ev .pic{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;display:grid;place-items:center;align-self:start}
+.tl-ev .pic img.scn{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.tl-ev .pic .faces{display:flex;justify-content:center;flex-wrap:wrap;padding:4px}
+.tl-ev .pic .faces .av{width:44px;height:44px;margin:0 -5px;border:2px solid var(--white)}
+.tl-ev b{display:block;font-size:17px;line-height:1.3}
+.tl-ev .d{margin:4px 0 0;font-size:14.5px;line-height:1.55;color:#4a4543}
+.tl-ev .gen{display:inline-block;margin-top:6px;font-size:12.5px;padding:2px 9px;border-radius:10px;background:var(--lav);border:1px solid var(--lav-d)}
+.tl-ev .tl-who{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;align-items:center}
+.tl-ev .tl-who button{border:0;background:none;padding:0;width:44px;height:44px;display:grid;place-items:center;border-radius:50%}
+.tl-ev .tl-who .av{width:36px;height:36px}
+.tl-ev .rd{margin-top:6px;border:0;background:none;padding:6px 0;min-height:36px;font-size:14px;color:var(--navy);text-decoration:underline;text-underline-offset:3px}
+.tl-lad{margin:14px 0;padding:12px;border:1.5px dashed var(--ink);border-radius:16px;background:rgba(255,248,220,.7)}
+.tl-lad h5{margin:0 0 4px;font-size:15px}
+.tl-lad p{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.tl-lad .row{display:flex;align-items:flex-start;gap:2px;margin:8px 0 2px;overflow-x:auto}
+.tl-lad .row small{display:block;font-size:12px;color:var(--muted);margin:0 0 2px}
+.tl-lad .step{display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:0;min-width:64px;font-size:12px;white-space:nowrap;flex-shrink:0}
+.tl-lad .step .av{width:40px;height:40px}
+.tl-lad .arr{align-self:center;color:var(--muted);font-size:13px;margin-top:-14px;flex-shrink:0}
+@media (min-width:700px){ .tl-ev{grid-template-columns:220px 1fr;padding:12px} .tl-ev b{font-size:19px} .tl-ev .d{font-size:15.5px} }
+@media (max-width:380px){ .tl-ev{grid-template-columns:1fr} }
 </style>
 <script>window.goatcounter = {no_onload: true};</script>
 <script data-goatcounter="https://kaylastudio.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
@@ -410,6 +448,7 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
   <div class="hbtns">
     <button class="ibtn" id="btnBook" title="이야기책"><img data-asset="images/icons/ui-book.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg><span class="lbl">이야기책</span></button>
     <button class="ibtn" id="btnQuiz" title="퀴즈"><img data-asset="images/icons/ui-quiz.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg><span class="lbl">퀴즈</span></button>
+    <button class="ibtn" id="btnTime" title="타임라인"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><circle cx="6" cy="6" r="2.2" fill="var(--gold)"/><circle cx="6" cy="12.5" r="2.2" fill="var(--gold)"/><circle cx="6" cy="19" r="2.2" fill="var(--gold)"/><path d="M11 6h9M11 12.5h7M11 19h9"/></svg><span class="lbl">타임라인</span></button>
     <button class="ibtn" id="btnList" title="전체 목록"><img data-asset="images/icons/ui-list.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span class="lbl">목록</span></button>
     <button class="ibtn" id="btnRand" title="아무나 보기"><img data-asset="images/icons/ui-random.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg><span class="lbl">아무나</span></button>
   </div>
@@ -433,7 +472,7 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
         <div class="tips">
           <span>초성 <code>ㅈㅇㅅ</code></span><span>오타 <code>헤라클래스</code></span><span>중간 글자 <code>클레스</code></span><span>별칭 <code>아약스</code> <code>주피터</code></span>
         </div>
-        <div class="modes"><button class="pillbtn pri" id="wBook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg>이야기책 읽기</button><button class="pillbtn navy" id="wQuiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>퀴즈 풀기</button></div>
+        <div class="modes"><button class="pillbtn pri" id="wBook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg>이야기책 읽기</button><button class="pillbtn navy" id="wQuiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>퀴즈 풀기</button><button class="pillbtn" id="wTime"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><circle cx="6" cy="6" r="2.2" fill="var(--gold)"/><circle cx="6" cy="12.5" r="2.2" fill="var(--gold)"/><circle cx="6" cy="19" r="2.2" fill="var(--gold)"/><path d="M11 6h9M11 12.5h7M11 19h9"/></svg>타임라인 보기</button></div>
         <div class="feat" id="feat"></div>
       </div>
     </div>
@@ -455,10 +494,15 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
   <div class="obar"><button class="ibtn" id="quizHomeBtn" title="퀴즈 처음"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span class="lbl">처음</span></button><h2 id="quizTitle">신화 퀴즈</h2><button class="ibtn sndbtn" aria-pressed="true" title="소리 끄기"><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button><button class="ibtn" id="quizClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="obody" id="quizBody"></div>
 </div>
+<div class="ov" id="ovTime" role="dialog" aria-label="타임라인">
+  <div class="obar"><button class="ibtn" id="timeTop" title="맨 위로" aria-label="맨 위로"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg></button><h2>신화 타임라인</h2><button class="ibtn sndbtn" aria-pressed="true" title="소리 끄기"><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button><button class="ibtn" id="timeClose" title="관계도로" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="obody" id="timeBody"></div>
+</div>
 <div class="tip" id="tip"></div>
 <script src="data.js"></script>
 <script src="stories.js"></script>
 <script src="book.js"></script>
+<script src="timeline.js"></script>
 <script>
 (function(){
 'use strict';
@@ -1107,7 +1151,7 @@ function renderCrumbs(){
   c.innerHTML = state.trail.map((id, i) => `${i ? '<span class="sep">›</span>' : ''}<button class="crumb${id === state.cur ? ' cur' : ''}" data-go="${id}">${esc(P[id].ko)}</button>`).join('');
   c.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
 }
-window.addEventListener('popstate', () => { const id = decodeURIComponent(location.hash.slice(1)); if(id === 'book'){ openBook(); return; } if(id === 'quiz'){ openQuiz(); return; } closeOverlays(); if(P[id]) go(id, false); else showHome(false); });
+window.addEventListener('popstate', () => { const id = decodeURIComponent(location.hash.slice(1)); if(id === 'book'){ openBook(); return; } if(id === 'quiz'){ openQuiz(); return; } if(id === 'timeline'){ openTime(); return; } closeOverlays(); if(P[id]) go(id, false); else showHome(false); });
 function showHome(push = true){
   track('/', '첫 화면');
   state.cur = null; svg.innerHTML = ''; $('#toolbar').innerHTML = ''; $('#crumbs').innerHTML = '';
@@ -1324,18 +1368,18 @@ let backTo = null;
 const backPill = document.createElement('button');
 backPill.className = 'backpill';
 document.body.appendChild(backPill);
-backPill.onclick = () => { const t = backTo; hideBackPill(); if(t === 'book') openBook(); else if(t === 'quiz') openQuiz(); };
+backPill.onclick = () => { const t = backTo; hideBackPill(); if(t === 'book') openBook(); else if(t === 'quiz') openQuiz(); else if(t === 'time') openTime(); };
 function hideBackPill(){ backPill.classList.remove('on'); backTo = null; }
 function leaveTo(kind, id){
   closeOverlays();
   backTo = kind;
-  backPill.innerHTML = kind === 'book' ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg>이야기책으로 돌아가기' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>퀴즈로 돌아가기';
+  backPill.innerHTML = kind === 'time' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><circle cx="6" cy="6" r="2.2" fill="var(--gold)"/><circle cx="6" cy="12.5" r="2.2" fill="var(--gold)"/><circle cx="6" cy="19" r="2.2" fill="var(--gold)"/><path d="M11 6h9M11 12.5h7M11 19h9"/></svg>타임라인으로 돌아가기' : kind === 'book' ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg>이야기책으로 돌아가기' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>퀴즈로 돌아가기';
   backPill.classList.add('on');
   go(id);
 }
 function wireLinks(root, kind){ root.querySelectorAll('[data-go]').forEach(b => b.onclick = e => { e.stopPropagation(); leaveTo(kind, b.dataset.go); }); }
-const ovBook = $('#ovBook'), ovQuiz = $('#ovQuiz');
-function closeOverlays(){ ovBook.classList.remove('on'); ovQuiz.classList.remove('on'); Sound.scene('main'); }
+const ovBook = $('#ovBook'), ovQuiz = $('#ovQuiz'), ovTime = $('#ovTime');
+function closeOverlays(){ ovBook.classList.remove('on'); ovQuiz.classList.remove('on'); ovTime.classList.remove('on'); Sound.scene('main'); }
 function setHash(h){ if(location.hash.slice(1) !== h) history.pushState(null, '', '#' + h); }
 function closeToGraph(){ closeOverlays(); if(state.cur) history.pushState(null, '', '#' + state.cur); else history.pushState(null, '', location.pathname); document.title = state.cur ? P[state.cur].ko + ' · 그리스 신화 관계도' : '그리스 신화 관계도'; }
 
@@ -1344,7 +1388,7 @@ const bookBody = $('#bookBody');
 let bookView = null; // null=목차, 숫자=장 번호
 let saveTimer = 0;
 function openBook(view){
-  hideBackPill(); ovQuiz.classList.remove('on'); ovBook.classList.add('on'); setHash('book'); document.title = '이야기책 · 그리스 신화 관계도';
+  hideBackPill(); ovQuiz.classList.remove('on'); ovTime.classList.remove('on'); ovBook.classList.add('on'); setHash('book'); document.title = '이야기책 · 그리스 신화 관계도';
   if(view !== undefined) bookView = view;
   if(bookView == null) drawToc(); else drawChapter(bookView, true);
 }
@@ -1419,7 +1463,7 @@ const LEVELS = {easy:{t:'쉬움', d:'이야기책 주인공들', mul:1}, normal:
 const MODE_NAME = k => k.startsWith('ch') ? `${k.slice(2)}장 퀴즈` : `자유 퀴즈 · ${LEVELS[k.slice(5)].t}`;
 let quiz = null; // 진행 중인 퀴즈
 function openQuiz(){
-  hideBackPill(); ovBook.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); document.title = '퀴즈 · 그리스 신화 관계도';
+  hideBackPill(); ovBook.classList.remove('on'); ovTime.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); document.title = '퀴즈 · 그리스 신화 관계도';
   Sound.scene('quiz');
   if(quiz && !quiz.over) drawQ(); else drawQuizHome();
 }
@@ -1652,6 +1696,87 @@ function firstVisitTips(){
     });
   }, 1200);
 }
+/* ---------- 타임라인 ---------- */
+const timeBody = $('#timeBody');
+const TL = window.TIMELINE || {eras:[], ladders:[]};
+let tlBuilt = false, tlScroll = 0;
+// 장면 그림을 카드 크기(4:3)로 줄여서 씀: 큰 그림 수십 장을 그대로 띄우면 휴대폰 메모리가 모자람
+const sceneThumbs = new Map();
+function sceneThumb(url){
+  if(!sceneThumbs.has(url)) sceneThumbs.set(url, (async () => {
+    if(!(await probe(url))) return null;
+    try{
+      const i = new Image(); i.src = url; await i.decode();
+      const c = document.createElement('canvas'); c.width = 440; c.height = 330;
+      const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(i, 0, 0, 440, 330);
+      const b = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.86));
+      return b ? URL.createObjectURL(b) : url;
+    }catch(e){ return url; }
+  })());
+  return sceneThumbs.get(url);
+}
+const tlIO = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => {
+  if(!e.isIntersecting) return; tlIO.unobserve(e.target);
+  const pic = e.target, f = pic.dataset.f;
+  sceneThumb(f).then(u => { if(!u) return; const im = new Image(); im.alt = ''; im.className = 'scn'; im.src = u; pic.appendChild(im); });
+}), {root:timeBody, rootMargin:'400px 0px'}) : null;
+function buildTime(){
+  const nav = TL.eras.map((er, i) => `<button data-era="${er.k}">${esc(er.t.replace(/^영웅의 시대 /, '영웅 '))}</button>`).join('');
+  let html = `<div class="tl-nav" id="tlNav">${nav}</div><div class="wrap"><div class="tl-intro"><h3>신화 타임라인</h3><p>세상의 시작부터 오디세우스의 귀향까지, 순서대로 따라가 봐요</p></div><div class="tl">`;
+  TL.eras.forEach((er, ei) => {
+    html += `<section class="tl-era" id="era-${er.k}" style="--tint:${er.tint}"><div class="no">${ei + 1}번째 시대</div><h4>${esc(er.t)}</h4><p>${esc(er.sub)}</p></section>`;
+    if(er.k === 'hero1' && TL.ladders.length){
+      html += `<div class="tl-lad"><h5>세대 사다리</h5><p>영웅들은 서로 할아버지와 손자 사이이기도 해요. 왼쪽이 먼저 태어난 세대예요.</p>` +
+        TL.ladders.map(l => `<div><small>${esc(l.t)}</small><div class="row">${l.ids.map((id, k) => (k ? '<span class="arr">→</span>' : '') + `<button class="step" data-go="${id}" aria-label="${esc(P[id].ko)}">${avHTML(P[id], 40)}<span>${esc(P[id].ko)}</span></button>`).join('')}</div></div>`).join('') + `</div>`;
+    }
+    er.ev.forEach(ev => {
+      const who = ev.who.filter(id => P[id]);
+      const f = ev.img ? `images/scenes/${ev.img}.png` : '';
+      const tint = er.tint;
+      html += `<article class="tl-ev" style="--tint:${tint}"><div class="pic" ${f ? `data-f="${f}"` : ''} style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 80%)"><div class="faces">${who.slice(0, 3).map(id => avHTML(P[id], 44)).join('')}</div></div>
+        <div><b>${esc(ev.t)}</b><p class="d">${esc(ev.d)}</p>${ev.gen ? `<span class="gen">세대 · ${esc(ev.gen)}</span>` : ''}
+        <div class="tl-who">${who.slice(0, 7).map(id => `<button data-go="${id}" title="${esc(P[id].ko)}" aria-label="${esc(P[id].ko)} 보기">${avHTML(P[id], 36)}</button>`).join('')}</div>
+        ${ev.ch ? `<button class="rd" data-ch="${ev.ch}">이야기책 ${ev.ch}장에서 읽기 ›</button>` : ''}</div></article>`;
+    });
+  });
+  html += `</div></div>`;
+  timeBody.innerHTML = html;
+  hydrateAv(timeBody);
+  wireLinks(timeBody, 'time');
+  timeBody.querySelectorAll('[data-ch]').forEach(b => b.onclick = () => { tlScroll = timeBody.scrollTop; openBook(+b.dataset.ch); });
+  timeBody.querySelectorAll('.tl-nav button').forEach(b => b.onclick = () => {
+    const t = $('#era-' + b.dataset.era); if(!t) return;
+    timeBody.scrollTo({top:t.offsetTop - $('#tlNav').offsetHeight - 8, behavior:'smooth'});
+  });
+  if(tlIO) timeBody.querySelectorAll('.tl-ev .pic[data-f]').forEach(p => tlIO.observe(p));
+  tlBuilt = true;
+}
+// 스크롤 위치에 맞춰 위쪽 시대 칩 강조
+let tlRaf = 0;
+timeBody.addEventListener('scroll', () => {
+  if(tlRaf) return;
+  tlRaf = requestAnimationFrame(() => {
+    tlRaf = 0;
+    const navH = ($('#tlNav') || {}).offsetHeight || 0;
+    let cur = TL.eras.length ? TL.eras[0].k : null;
+    TL.eras.forEach(er => { const el = $('#era-' + er.k); if(el && el.offsetTop - navH - 40 <= timeBody.scrollTop) cur = er.k; });
+    timeBody.querySelectorAll('.tl-nav button').forEach(b => { const on = b.dataset.era === cur; if(on !== b.classList.contains('on')){ b.classList.toggle('on', on); if(on){ const nv = b.parentElement; nv.scrollLeft = b.offsetLeft - (nv.clientWidth - b.offsetWidth) / 2; } } });
+  });
+}, {passive:true});
+function openTime(){
+  hideBackPill(); ovBook.classList.remove('on'); ovQuiz.classList.remove('on'); ovTime.classList.add('on');
+  setHash('timeline'); document.title = '타임라인 · 그리스 신화 관계도';
+  Sound.scene('main'); track('/타임라인', '타임라인');
+  if(!tlBuilt) buildTime();
+  timeBody.scrollTop = tlScroll;
+  timeBody.dispatchEvent(new Event('scroll'));
+}
+timeBody.addEventListener('click', e => { if(e.target.closest('[data-go]')) tlScroll = timeBody.scrollTop; }, true);
+$('#timeClose').onclick = () => { tlScroll = timeBody.scrollTop; closeToGraph(); };
+$('#timeTop').onclick = () => timeBody.scrollTo({top:0, behavior:'smooth'});
+$('#btnTime').onclick = () => openTime();
+$('#wTime').onclick = () => openTime();
+
 /* ---------- 시작 ---------- */
 const FEAT = ['zeus','heracles','athena','medusa','achilles','odysseus','poseidon','perseus','hades','persephone','oedipus','cerberus'];
 $('#feat').innerHTML = FEAT.map(id => `<button data-go="${id}">${avHTML(P[id], 30)}${esc(P[id].ko)}</button>`).join('');
@@ -1659,10 +1784,11 @@ hydrateAv($('#feat'));
 $('#feat').querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
 wireAssets(document);
 const start = decodeURIComponent(location.hash.slice(1));
-if(!P[start] && start !== 'book' && start !== 'quiz') track('/', '첫 화면');
+if(!P[start] && start !== 'book' && start !== 'quiz' && start !== 'timeline') track('/', '첫 화면');
 if(P[start]) go(start, false);
 else if(start === 'book') openBook();
 else if(start === 'quiz') openQuiz();
+else if(start === 'timeline') openTime();
 })();
 </script>
 </body>
