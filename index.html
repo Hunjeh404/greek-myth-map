@@ -1703,6 +1703,7 @@ function firstVisitTips(){
 const timeBody = $('#timeBody');
 const TL = window.TIMELINE || {eras:[], ladders:[]};
 let tlBuilt = false, tlScroll = 0;
+const ORD = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열', '열한', '열두'];
 // 장면 그림을 카드 크기(4:3)로 줄여서 씀: 큰 그림 수십 장을 그대로 띄우면 휴대폰 메모리가 모자람
 const sceneThumbs = new Map();
 function sceneThumb(url){
@@ -1727,7 +1728,7 @@ function buildTime(){
   const nav = TL.eras.map((er, i) => `<button data-era="${er.k}">${esc(er.t.replace(/^영웅의 시대 /, '영웅 '))}</button>`).join('');
   let html = `<div class="tl-nav" id="tlNav">${nav}</div><div class="wrap"><div class="tl-intro"><h3>신화 타임라인</h3><p>세상의 시작부터 오디세우스의 귀향까지, 순서대로 따라가 봐요</p></div><div class="tl">`;
   TL.eras.forEach((er, ei) => {
-    html += `<section class="tl-era" id="era-${er.k}" style="--tint:${er.tint}"><div class="no">${ei + 1}번째 시대</div><h4>${esc(er.t)}</h4><p>${esc(er.sub)}</p></section>`;
+    html += `<section class="tl-era" id="era-${er.k}" style="--tint:${er.tint}"><div class="no">${ORD[ei]} 번째 시대</div><h4>${esc(er.t)}</h4><p>${esc(er.sub)}</p></section>`;
     if(er.k === 'hero1' && TL.ladders.length){
       html += `<div class="tl-lad"><h5>세대 사다리</h5><p>영웅들은 서로 할아버지와 손자 사이이기도 해요. 왼쪽이 먼저 태어난 세대예요.</p>` +
         TL.ladders.map(l => `<div><small>${esc(l.t)}</small><div class="row">${l.ids.map((id, k) => (k ? '<span class="arr">→</span>' : '') + `<button class="step" data-go="${id}" aria-label="${esc(P[id].ko)}">${avHTML(P[id], 40)}<span>${esc(P[id].ko)}</span></button>`).join('')}</div></div>`).join('') + `</div>`;
