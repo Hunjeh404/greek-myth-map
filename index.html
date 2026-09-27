@@ -439,6 +439,9 @@ html[lang=en]{--font:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;--ha
 html[lang=en] .ep::before{content:"Story"}
 html[lang=en] .scene.soon figcaption::after{content:" · picture coming soon"}
 html[lang=en] .brand h1{letter-spacing:0}
+/* 영어 제목(Greek Myth Map)은 한글 붓글씨보다 넓어서, 좁은 휴대폰에서는 로고를 빼고 제목을 온전히 보여 줌 */
+@media (max-width:420px){ html[lang=en] .brand .logo{display:none} }
+@media (max-width:340px){ html[lang=en] .brand h1{font-size:12.5px} }
 .langbtn{font-weight:700;font-size:13px}
 main.nopanel .zoom .ibtn.langbtn{display:inline-flex}
 </style>
