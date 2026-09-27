@@ -189,7 +189,8 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 
 /* 환영 화면 */
 .welcome{position:absolute;inset:0;display:grid;place-items:center;padding:20px;z-index:4;overflow-y:auto}
-.welcome .box{max-width:620px;text-align:center}
+.welcome .box{width:100%;max-width:620px;text-align:center;min-width:0}
+.welcome h2,.welcome p{max-width:100%}
 .welcome .art{width:min(280px,60vw);aspect-ratio:1;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,var(--white),var(--gold) 70%);border:1.5px solid var(--ink);overflow:hidden}
 .welcome .art img{width:100%;height:100%;object-fit:cover}
 .welcome .art .fb{font-family:var(--brush);font-size:84px;color:var(--navy)}
@@ -371,8 +372,15 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 .qr .wrong{text-align:left;margin-top:16px}
 .qr .wrong h4{font-family:var(--hand);font-weight:400;font-size:22px;margin:0 0 6px}
 .qr .wrong div{border:1px solid var(--line);border-radius:12px;background:var(--white);padding:8px 12px;margin:0 0 6px;font-size:14.5px;line-height:1.55}
-.welcome .modes{display:flex;gap:10px;justify-content:center;margin:0 0 16px;flex-wrap:wrap}
-.welcome .modes .pillbtn{font-size:17px;padding:11px 20px}
+.welcome .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:480px;margin:6px auto 18px}
+.welcome .mode{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px 12px;border:1.5px solid var(--ink);border-radius:20px;box-shadow:0 3px 0 rgba(58,55,57,.14);min-height:44px}
+.welcome .mode:active{transform:translateY(1px);box-shadow:none}
+.welcome .mode.m-book{background:var(--gold)}.welcome .mode.m-quiz{background:var(--lav)}.welcome .mode.m-time{background:var(--mint)}
+.welcome .mode .ic{width:64px;height:64px;border-radius:50%;background:var(--white);border:1.5px solid var(--ink);display:grid;place-items:center;overflow:hidden}
+.welcome .mode .ic img{width:48px;height:48px;object-fit:contain}
+.welcome .mode .ic svg{width:30px;height:30px}
+.welcome .mode b{font-weight:400;font-size:15.5px;line-height:1.25}
+@media (max-width:360px){ .welcome .modes{gap:8px} .welcome .mode .ic{width:54px;height:54px} .welcome .mode .ic img{width:40px;height:40px} .welcome .mode b{font-size:14px} }
 @media (max-width:900px){
   .ov .obar h2{font-size:24px}
   .chap h3{font-size:32px}
@@ -440,8 +448,9 @@ html[lang=en] .ep::before{content:"Story"}
 html[lang=en] .scene.soon figcaption::after{content:" · picture coming soon"}
 html[lang=en] .brand h1{letter-spacing:0}
 /* 영어 제목(Greek Myth Map)은 한글 붓글씨보다 넓어서, 좁은 휴대폰에서는 로고를 빼고 제목을 온전히 보여 줌 */
-@media (max-width:420px){ html[lang=en] .brand .logo{display:none} }
-@media (max-width:340px){ html[lang=en] .brand h1{font-size:12.5px} }
+/* 머리: 로고 없이 제목만. 글자 크기는 fitText()가 남은 폭에 맞춰 줄임 */
+header .brand .logo{display:none}
+@media (max-width:480px){ .brand h1{font-size:26px} html[lang=en] .brand h1{font-size:22px} }
 .langbtn{font-weight:700;font-size:13px}
 main.nopanel .zoom .ibtn.langbtn{display:inline-flex}
 </style>
@@ -458,7 +467,7 @@ main.nopanel .zoom .ibtn.langbtn{display:inline-flex}
   <div class="search">
     <img class="ico" data-asset="images/icons/ui-search.png" alt="">
     <svg class="ico" data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
-    <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="이름·초성·별칭으로 검색 (예: ㅎㄹㅋ, 포세이든, 클레스)" aria-label="인물 검색" aria-autocomplete="list" aria-controls="suggest">
+    <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="이름·초성·별칭으로 검색" aria-label="인물 검색" aria-autocomplete="list" aria-controls="suggest">
     <button class="clear" id="qclear" aria-label="지우기"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     <div class="suggest" id="suggest" role="listbox"></div>
   </div>
@@ -486,10 +495,7 @@ main.nopanel .zoom .ibtn.langbtn{display:inline-flex}
         <div class="art"><img data-asset="images/ui/welcome.png" alt=""><span class="fb" data-fb>Ω</span></div>
         <h2>누구의 이야기가 궁금하세요?</h2>
         <p>이름을 검색하면 그 인물을 중심으로 관계도가 펼쳐져요</p>
-        <div class="tips">
-          <span>초성 <code>ㅈㅇㅅ</code></span><span>오타 <code>헤라클래스</code></span><span>중간 글자 <code>클레스</code></span><span>별칭 <code>아약스</code> <code>주피터</code></span>
-        </div>
-        <div class="modes"><button class="pillbtn pri" id="wBook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg>이야기책 읽기</button><button class="pillbtn navy" id="wQuiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>퀴즈 풀기</button><button class="pillbtn" id="wTime"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><circle cx="6" cy="6" r="2.2" fill="var(--gold)"/><circle cx="6" cy="12.5" r="2.2" fill="var(--gold)"/><circle cx="6" cy="19" r="2.2" fill="var(--gold)"/><path d="M11 6h9M11 12.5h7M11 19h9"/></svg>타임라인 보기</button></div>
+        <div class="modes"><button class="mode m-book" id="wBook"><span class="ic"><img data-asset="images/icons/ui-book.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg></span><b>이야기책 읽기</b></button><button class="mode m-quiz" id="wQuiz"><span class="ic"><img data-asset="images/icons/ui-quiz.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg></span><b>퀴즈 풀기</b></button><button class="mode m-time" id="wTime"><span class="ic"><img data-asset="images/icons/ui-time.png" alt=""><svg data-fb viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><circle cx="6" cy="6" r="2.2" fill="var(--gold)"/><circle cx="6" cy="12.5" r="2.2" fill="var(--gold)"/><circle cx="6" cy="19" r="2.2" fill="var(--gold)"/><path d="M11 6h9M11 12.5h7M11 19h9"/></svg></span><b>타임라인 보기</b></button></div>
         <div class="feat" id="feat"></div>
       </div>
     </div>
@@ -1846,17 +1852,15 @@ if(EN_ON){
   const T = {'그리스 신화 관계도':'Greek Myth Map','신·영웅·괴물의 얽히고설킨 이야기':'Gods, heroes and monsters, all tangled together','처음 화면':'Home',
     '인물 검색':'Search characters','지우기':'Clear','이야기책':'Storybook','퀴즈':'Quiz','타임라인':'Timeline','전체 목록':'All characters','목록':'List',
     '아무나 보기':'Surprise me','아무나':'Surprise','관계도':'Relationship map','소리 끄기':'Sound off','확대':'Zoom in','축소':'Zoom out','화면에 맞추기':'Fit to screen',
-    '누구의 이야기가 궁금하세요?':'Whose story would you like to hear?','이름을 검색하면 그 인물을 중심으로 관계도가 펼쳐져요':'Search for a name and their family and friends will spread out around them',
-    '이야기책 읽기':'Read the storybook','퀴즈 풀기':'Take a quiz','타임라인 보기':'See the timeline','목록 안에서 찾기':'Search the list','닫기':'Close','차례':'Contents',
-    '퀴즈 처음':'Quiz home','이름·초성·별칭으로 검색 (예: ㅎㄹㅋ, 포세이든, 클레스)':'Search by name or nickname (e.g. Hercules, Zeuss, cles)','처음':'Home','신화 퀴즈':'Myth Quiz','신화 타임라인':'Myth Timeline','맨 위로':'Back to top','관계도로':'Back to the map'};
+    '누구의 이야기가 궁금하세요?':'Whose story shall we read?','이름을 검색하면 그 인물을 중심으로 관계도가 펼쳐져요':'Search a name to see their family and friends',
+    '이야기책 읽기':'Storybook','퀴즈 풀기':'Quiz','타임라인 보기':'Timeline','목록 안에서 찾기':'Search the list','닫기':'Close','차례':'Contents',
+    '퀴즈 처음':'Quiz home','이름·초성·별칭으로 검색':'Search by name or nickname','처음':'Home','신화 퀴즈':'Myth Quiz','신화 타임라인':'Myth Timeline','맨 위로':'Back to top','관계도로':'Back to the map'};
   const tr = v => T[v.trim()] ? v.replace(v.trim(), T[v.trim()]) : v;
   document.querySelectorAll('body *').forEach(el => {
     if(el.parentElement && el.parentElement.closest('#graph, #panel, #bookBody, #quizBody, #timeBody, #mbody, #suggest')) return;
     ['title', 'aria-label', 'placeholder'].forEach(a => { const v = el.getAttribute(a); if(v && T[v]) el.setAttribute(a, T[v]); });
     el.childNodes.forEach(n => { if(n.nodeType === 3 && n.nodeValue.trim()) n.nodeValue = tr(n.nodeValue); });
   });
-  const tips = document.querySelector('.welcome .tips');
-  if(tips) tips.innerHTML = '<span>Typos are fine <code>Heracels</code></span><span>Part of a name <code>cles</code></span><span>Other names <code>Hercules</code> <code>Jupiter</code></span>';
   document.title = APP_NAME;
   const md = document.querySelector('meta[name=description]'); if(md) md.content = 'Search and explore the gods, heroes and monsters of Greek myth on a relationship map';
 }
@@ -1872,6 +1876,30 @@ if(EN_ON){
   const snd = z.querySelector('.sndbtn');
   if(snd && snd.nextSibling) z.insertBefore(b, snd.nextSibling); else z.appendChild(b);
 })();
+
+/* ---------- 글자를 한 줄에 맞추기 ---------- */
+// 한 줄에 들어갈 때까지 글자를 줄이고, 최소 크기에서도 넘치면 두 줄까지 허용
+function fitText(el, min, allowTwo, boxEl){
+  if(!el || !el.offsetParent) return;
+  el.style.fontSize = ''; el.style.whiteSpace = 'nowrap';
+  let size = parseFloat(getComputedStyle(el).fontSize);
+  const max = size;
+  const over = () => { const r = document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect().width > (boxEl || el).clientWidth - 2; };
+  while(over() && size > min){ size -= 0.5; el.style.fontSize = size + 'px'; }
+  if(over() && allowTwo){
+    el.style.whiteSpace = 'normal'; size = max; el.style.fontSize = size + 'px';
+    const lh = () => parseFloat(getComputedStyle(el).lineHeight) || size * 1.25;
+    while(el.scrollHeight > lh() * 2 + 2 && size > min){ size -= 0.5; el.style.fontSize = size + 'px'; }
+  }
+}
+function fitAll(){
+  if(innerWidth <= 900) fitText(document.querySelector('.brand h1'), 12, false, document.querySelector('.brand')); else { const h = document.querySelector('.brand h1'); h.style.fontSize = ''; }
+  fitText(document.querySelector('.welcome h2'), 28, true);
+  fitText(document.querySelector('.welcome p'), 16, true);
+}
+addEventListener('resize', () => requestAnimationFrame(fitAll));
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+setTimeout(fitAll, 0); setTimeout(fitAll, 800);
 
 /* ---------- 시작 ---------- */
 const FEAT = ['zeus','heracles','athena','medusa','achilles','odysseus','poseidon','perseus','hades','persephone','oedipus','cerberus'];
