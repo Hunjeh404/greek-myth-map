@@ -227,7 +227,7 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
     position:absolute;left:0;right:0;bottom:0;height:46%;border-left:0;border-top:1.5px solid var(--ink);
     border-radius:22px 22px 0 0;z-index:20;transition:height .25s ease;box-shadow:0 -6px 20px rgba(58,55,57,.12);padding-top:6px
   }
-  .panel.min{height:92px;overflow:hidden}
+  .panel.min{height:166px;overflow:hidden} /* 손잡이 + 초상 월계수 테두리(아래 리본까지)가 다 보이는 높이 */
   .panel.max{height:86%}
   .panel .grab{display:block;width:calc(100% + 36px);margin:0 -18px;height:44px;border:0;background:rgba(251,246,232,.96);position:sticky;top:-6px;z-index:2;touch-action:none;cursor:ns-resize}
   .panel .grab::after{content:"";display:block;width:56px;height:6px;border-radius:3px;background:var(--lav-d);margin:14px auto}
@@ -1073,7 +1073,7 @@ function renderPanel(id, nb){
 /* 모바일: 손잡이를 끌어 패널 높이 조절, 짧게 누르면 단계 전환 */
 (function(){
   let drag = null;
-  const MIN = 92;
+  const MIN = 166;
   const maxH = () => $('#main').clientHeight - 12;
   panel.addEventListener('pointerdown', e => {
     if(!e.target.closest('.grab') || innerWidth > 900) return;
@@ -1090,7 +1090,7 @@ function renderPanel(id, nb){
     const h = Math.max(MIN, Math.min(maxH(), drag.h + dy));
     panel.classList.remove('min', 'max');
     panel.style.height = h + 'px';
-    panel.classList.toggle('short', h < 140);
+    panel.classList.toggle('short', h < 200);
   });
   const end = e => {
     if(!drag || e.pointerId !== drag.id) return;
