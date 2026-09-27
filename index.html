@@ -430,6 +430,13 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 .tl-lad .arr{align-self:center;color:var(--muted);font-size:13px;margin-top:-14px;flex-shrink:0}
 @media (min-width:700px){ .tl-ev{grid-template-columns:240px 1fr;padding:14px} .tl-ev .ttl{font-size:19px} .tl-ev .d{font-size:15.5px} }
 @media (max-width:380px){ .tl-ev{grid-template-columns:112px 1fr} .tl-ev .d{font-size:14px} }
+/* 영어판 */
+html[lang=en]{--font:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;--hand:"Patrick Hand","Nunito",cursive;--brush:"IM Fell English",Georgia,serif}
+html[lang=en] .ep::before{content:"Story"}
+html[lang=en] .scene.soon figcaption::after{content:" · picture coming soon"}
+html[lang=en] .brand h1{letter-spacing:0}
+.langbtn{font-weight:700;font-size:13px}
+main.nopanel .zoom .ibtn.langbtn{display:inline-flex}
 </style>
 <script>window.goatcounter = {no_onload: true};</script>
 <script data-goatcounter="https://kaylastudio.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
@@ -508,9 +515,31 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 <script src="timeline.js"></script>
 <script>
 (function(){
+  var l = null, m = location.search.match(/[?&]lang=(ko|en)\b/);
+  try { if(m){ l = m[1]; localStorage.setItem('myth.lang', l); } else l = localStorage.getItem('myth.lang'); } catch(e){ if(m) l = m[1]; }
+  if(l !== 'ko' && l !== 'en') l = /^ko/i.test(navigator.language || '') ? 'ko' : 'en';
+  window.LANG = l; document.documentElement.lang = l;
+  if(l === 'en'){
+    document.write('<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&family=Nunito:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">');
+    document.write('<script src="en.js"><\/script>');
+  }
+})();
+</script>
+<script>
+(function(){
 'use strict';
 const D = window.MYTH;
+const EN_ON = window.LANG === 'en' && !!window.EN;
+const L = (ko, en) => EN_ON ? en : ko;
+if(EN_ON){
+  const E = window.EN;
+  D.people.forEach(p => { const e = E.people[p.id]; if(!e) return; p.ko = e[0]; p.al = e[1]; p.dom = e[2]; p.sym = e[3]; p.ep = e[4]; });
+  D.cats = E.cats;
+  D.edges.forEach(e => { if(e.n) e.n = E.edge[e.n] || e.n; if(e.l) e.l = E.edge[e.l] || e.l; if(e.il) e.il = E.edge[e.il] || e.il; });
+  window.STORIES = E.stories; window.BOOK = E.book; window.TIMELINE = E.timeline;
+}
 const ST = window.STORIES || {};
+const APP_NAME = L('그리스 신화 관계도', 'Greek Myth Map');
 const P = {}; D.people.forEach(p => P[p.id] = p);
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -519,17 +548,17 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 const CAT_COLOR = {pri:'#DCCFE5',tit:'#C7B890',oly:'#F0DEAA',god:'#BDCFE0',nym:'#C7E1D7',her:'#F1C7A4',mor:'#EDE7D6',mon:'#B6B1C4',grp:'#C8CCD6',art:'#EFCB6E'};
 // 관계 그룹: 표시 순서 = 원 위 배치 순서(12시부터 시계방향)
 const GROUPS = [
-  {k:'parent', ko:'부모', color:'#6F8FB0'},
-  {k:'spouse', ko:'배우자', color:'#E08F55'},
-  {k:'lover',  ko:'연인', color:'#A58FC4'},
-  {k:'sib',    ko:'형제자매', color:'#A89660'},
-  {k:'child',  ko:'자녀', color:'#6FA38D'},
-  {k:'member', ko:'소속·구성원', color:'#C9A94E'},
-  {k:'bond',   ko:'인연', color:'#8F96A8'},
-  {k:'item',   ko:'보물·신물', color:'#C08A1E'},
-  {k:'holder', ko:'관련 인물', color:'#8C7A5B'},
-  {k:'rival',  ko:'대립', color:'#B8876A'},
-  {k:'kill',   ko:'죽임', color:'#2E3A57'},
+  {k:'parent', ko:L('부모','Parents'), color:'#6F8FB0'},
+  {k:'spouse', ko:L('배우자','Spouses'), color:'#E08F55'},
+  {k:'lover',  ko:L('연인','Loves'), color:'#A58FC4'},
+  {k:'sib',    ko:L('형제자매','Siblings'), color:'#A89660'},
+  {k:'child',  ko:L('자녀','Children'), color:'#6FA38D'},
+  {k:'member', ko:L('소속·구성원','Groups & members'), color:'#C9A94E'},
+  {k:'bond',   ko:L('인연','Other ties'), color:'#8F96A8'},
+  {k:'item',   ko:L('보물·신물','Treasures'), color:'#C08A1E'},
+  {k:'holder', ko:L('관련 인물','Linked people'), color:'#8C7A5B'},
+  {k:'rival',  ko:L('대립','Rivals'), color:'#B8876A'},
+  {k:'kill',   ko:L('죽임','Defeated'), color:'#2E3A57'},
 ];
 const GC = {}; GROUPS.forEach(g => GC[g.k] = g);
 
@@ -577,7 +606,7 @@ function thumbOf(url, size){
 probe('images/ui/frame.png').then(ok => { FRAME_OK = ok; if(ok){ thumbOf('images/ui/frame.png', 256).then(u => { FRAME_SRC = u; document.querySelectorAll('#graph .node:not(.center) image[href="images/ui/frame.png"]').forEach(el => el.setAttribute('href', u)); }); if(state.cur) render(state.cur, false); } });
 Object.keys(CAT_COLOR).forEach(c => probe(`images/icons/cat-${c}.png`).then(ok => { if(ok) catIcon[c] = `images/icons/cat-${c}.png`; }));
 
-function initialOf(p){ return p.ko.replace(/\(.*\)/,'').trim().charAt(0); }
+function initialOf(p){ return p.ko.replace(/\(.*\)/,'').replace(/^The /,'').trim().charAt(0); }
 // HTML 아바타
 function avatar(p, size){
   const el = document.createElement('span');
@@ -623,6 +652,7 @@ const hasHangul = s => /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(s);
 
 // 검색 색인
 const INDEX = D.people.map(p => {
+  if(EN_ON){ const keys = []; const add = (t, kind) => { const n = norm(t); if(n && !keys.some(k => k.n === n)) keys.push({t, kind, n, j:n, c:''}); }; add(p.ko, 'name'); add(p.ko.replace(/\(.*?\)/g, '').replace(/^The /, ''), 'name'); p.al.forEach(a => add(a, 'alias')); add(p.en, 'en'); return {p, keys}; }
   const keys = [];
   const add = (t, kind) => { const n = norm(t); if(n && !keys.some(k => k.n === n)) keys.push({t, kind, n, j:jamo(n), c:chosung(n)}); };
   add(p.ko, 'name');
@@ -681,11 +711,11 @@ function search(raw, limit = 8){
           const whole = lev(a, b);
           const part = a.length >= 5 ? subDist(a, b) : Infinity;
           const d = Math.min(whole, part + 0.5);
-          if(d <= allow) { s = 64 - d*8 - (whole > d ? 4 : 0); why = '비슷한 이름'; }
+          if(d <= allow) { s = 64 - d*8 - (whole > d ? 4 : 0); why = L('비슷한 이름', 'Similar name'); }
         }
       }
       if(s){
-        if(k.kind === 'alias' && !why) why = '별칭 ' + k.t;
+        if(k.kind === 'alias' && !why) why = L('별칭 ', 'Also called ') + k.t;
         else if(k.kind === 'alias') why += ' · ' + k.t;
         if(k.kind === 'en' && !why) why = k.t;
         if(k.kind !== 'name') s -= 2;
@@ -716,6 +746,7 @@ const degree = id => deg[id] || 0;
 const parentsOf = (id, withV) => ADJ[id].filter(e => e.t === 'P' && e.b === id && (withV || !e.v)).map(e => e.a);
 const childrenOf = (id, withV) => ADJ[id].filter(e => e.t === 'P' && e.a === id && (withV || !e.v)).map(e => e.b);
 
+const SIB_FULL = L('형제자매', 'Sibling');
 // 중심 인물 기준 이웃 목록: id -> {groups:Set, tags:[{g,label,note,v}]}
 function neighbors(id, withV){
   const map = new Map();
@@ -730,14 +761,14 @@ function neighbors(id, withV){
     if(e.v && !withV) continue;
     const me = e.a === id, o = me ? e.b : e.a;
     switch(e.t){
-      case 'P': put(o, me ? 'child' : 'parent', me ? '자녀' : '부모', e.n, e.v); break;
-      case 'S': put(o, 'spouse', '배우자', e.n, e.v); break;
-      case 'L': put(o, 'lover', '연인', e.n, e.v); break;
-      case 'K': put(o, 'kill', me ? '처치함' : '죽인 자', e.n, e.v); break;
-      case 'F': put(o, 'rival', '대립', e.n, e.v); break;
-      case 'O': put(o, 'bond', me ? (e.il || '인연') : (e.l || '인연'), e.n, e.v); break;
-      case 'M': put(o, 'member', me ? '구성원' : '소속', e.n, e.v); break;
-      case 'T': put(o, me ? 'holder' : 'item', me ? (e.il || '관련 인물') : (e.l || '관련 물건'), e.n, e.v); break;
+      case 'P': put(o, me ? 'child' : 'parent', me ? L('자녀', 'Child') : L('부모', 'Parent'), e.n, e.v); break;
+      case 'S': put(o, 'spouse', L('배우자', 'Spouse'), e.n, e.v); break;
+      case 'L': put(o, 'lover', L('연인', 'Love'), e.n, e.v); break;
+      case 'K': put(o, 'kill', me ? L('처치함', 'Defeated') : L('죽인 자', 'Defeated by'), e.n, e.v); break;
+      case 'F': put(o, 'rival', L('대립', 'Rival'), e.n, e.v); break;
+      case 'O': put(o, 'bond', me ? (e.il || L('인연', 'Tie')) : (e.l || L('인연', 'Tie')), e.n, e.v); break;
+      case 'M': put(o, 'member', me ? L('구성원', 'Member') : L('소속', 'Group'), e.n, e.v); break;
+      case 'T': put(o, me ? 'holder' : 'item', me ? (e.il || L('관련 인물', 'Linked person')) : (e.l || L('관련 물건', 'Linked treasure')), e.n, e.v); break;
     }
   }
   // 형제자매 (부모 공유)
@@ -748,7 +779,7 @@ function neighbors(id, withV){
     sibs.forEach((cnt, s) => {
       const sp = parentsOf(s, withV);
       const full = cnt >= Math.min(myPar.length, sp.length) && myPar.length === sp.length;
-      put(s, 'sib', full ? '형제자매' : '이복·이부', '', false);
+      put(s, 'sib', full ? SIB_FULL : L('이복·이부', 'Half-sibling'), '', false);
     });
   }
   const order = GROUPS.map(g => g.k);
@@ -780,11 +811,11 @@ function layout(center, nb){
   for(const k in byG) byG[k].sort((a, b) => degree(b.id) - degree(a.id) || P[a.id].ko.localeCompare(P[b.id].ko, 'ko'));
   // 형제가 많으면 접기
   if(byG.sib.length > SIB_LIMIT && !state.expanded.has('sib')){
-    const full = byG.sib.filter(n => n.tags.some(t => t.label === '형제자매'));
+    const full = byG.sib.filter(n => n.tags.some(t => t.label === SIB_FULL));
     const half = byG.sib.filter(n => !full.includes(n));
     const keep = full.concat(half).slice(0, SIB_LIMIT - 1);
     const rest = byG.sib.length - keep.length;
-    byG.sib = keep.concat([{id:'__more_sib', more:rest, moreG:'sib', main:'sib', tags:[{g:'sib', label:`+${rest}명`}]}]);
+    byG.sib = keep.concat([{id:'__more_sib', more:rest, moreG:'sib', main:'sib', tags:[{g:'sib', label:L(`+${rest}명`, `+${rest}`)}]}]);
   }
   // 연결이 아주 많은 인물(제우스 등)은 큰 묶음을 접어서 한 번에 그리는 양을 줄임 (휴대폰에서 화면 일부가 비는 문제 방지)
   const NODE_BUDGET = 48, GROUP_LIMIT = 10;
@@ -894,7 +925,7 @@ function render(id, fresh = true){
     const path = mk('path', {d:`M0,0 Q${mx},${my} ${o.x},${o.y}`, class:'edge' + (o.n.allV ? ' v' : ''), stroke:col, 'data-id':o.n.id, style:`animation-delay:${i*12}ms`}, eg);
     if(o.n.more){
       const mg = o.n.moreG || 'sib';
-      const el = nodeEl(ng, null, o.x, o.y, 28, {more:true, label:`+${o.n.more}`, aria:`${mg === 'sib' ? '이복형제' : GC[mg].ko} ${o.n.more}개 더 보기`, delay:i*12});
+      const el = nodeEl(ng, null, o.x, o.y, 28, {more:true, label:`+${o.n.more}`, aria:L(`${mg === 'sib' ? '이복형제' : GC[mg].ko} ${o.n.more}개 더 보기`, `Show ${o.n.more} more ${mg === 'sib' ? 'half-siblings' : GC[mg].ko.toLowerCase()}`), delay:i*12});
       el.addEventListener('click', () => { state.expanded.add(mg); render(id, false); });
       onKey(el, () => { state.expanded.add(mg); render(id, false); });
       return;
@@ -971,7 +1002,7 @@ window.addEventListener('resize', () => { if(state.cur) fit(); });
 /* ---------- 툴팁 ---------- */
 const tip = $('#tip');
 function showTip(ev, q, tags){
-  tip.innerHTML = `<b>${esc(q.ko)}</b> · ${esc(q.dom)}<br>` + tags.map(t => `<span style="color:${t.g === 'kill' ? '#F1C7A4' : '#F0DEAA'}">${esc(t.label)}</span>${t.note ? ' — ' + esc(t.note) : ''}${t.v ? ' <i>(이설)</i>' : ''}`).join('<br>');
+  tip.innerHTML = `<b>${esc(q.ko)}</b> · ${esc(q.dom)}<br>` + tags.map(t => `<span style="color:${t.g === 'kill' ? '#F1C7A4' : '#F0DEAA'}">${esc(t.label)}</span>${t.note ? ' — ' + esc(t.note) : ''}${t.v ? ' <i>' + L('(이설)', '(other version)') + '</i>' : ''}`).join('<br>');
   tip.style.display = 'block'; moveTip(ev);
 }
 function moveTip(ev){ const x = Math.min(ev.clientX + 14, innerWidth - tip.offsetWidth - 8); tip.style.left = x + 'px'; tip.style.top = (ev.clientY + 16) + 'px'; }
@@ -994,8 +1025,8 @@ function renderToolbar(nb){
   if(vcount){
     const t = document.createElement('button');
     t.className = 'chip toggle' + (state.withV ? ' on' : '');
-    t.innerHTML = `${state.withV ? '이설 포함' : '이설 보기'} <b style="color:inherit;opacity:.75">${vcount}</b>`;
-    t.title = '출처마다 다른 전승(점선으로 표시)';
+    t.innerHTML = `${state.withV ? L('이설 포함', 'Other versions on') : L('이설 보기', 'Other versions')} <b style="color:inherit;opacity:.75">${vcount}</b>`;
+    t.title = L('출처마다 다른 전승(점선으로 표시)', 'Stories told differently by different writers (dotted lines)');
     t.onclick = () => { state.withV = !state.withV; try{ localStorage.setItem('myth.v', state.withV ? '1' : '0'); }catch(e){} render(state.cur, false); };
     tb.appendChild(t);
   }
@@ -1013,27 +1044,27 @@ function renderPanel(id, nb){
     return `<h3><span class="dot" style="background:${g.color}"></span>${g.ko} <small>${list.length}</small></h3><div class="rl">` +
       list.map(({id:o, t}) => { const q = P[o];
         const lab = (g.k === 'kill' || g.k === 'bond' || g.k === 'member' || g.k === 'sib') ? `<span class="n">${esc(t.label)}</span>` : '';
-        return `<button class="rp${t.v ? ' v' : ''}" data-go="${o}" title="${esc(t.note || q.dom)}">${avHTML(q, 26)}${esc(q.ko)}${lab}${t.note && g.k !== 'bond' ? `<span class="n">${esc(t.note)}</span>` : ''}${t.v ? '<span class="vb">이설</span>' : ''}</button>`;
+        return `<button class="rp${t.v ? ' v' : ''}" data-go="${o}" title="${esc(t.note || q.dom)}">${avHTML(q, 26)}${esc(q.ko)}${lab}${t.note && g.k !== 'bond' ? `<span class="n">${esc(t.note)}</span>` : ''}${t.v ? '<span class="vb">' + L('이설', 'alt') + '</span>' : ''}</button>`;
       }).join('') + '</div>';
   }).join('');
   const hidden = ADJ[id].filter(e => e.v).length;
   panel.innerHTML = `
-    <button class="grab" aria-label="패널 크기 바꾸기"></button>
+    <button class="grab" aria-label="${L('패널 크기 바꾸기', 'Resize panel')}"></button>
     <div class="hero">
       <div class="portrait">${avHTML(p, 118)}${FRAME_OK ? '<img class="frame" src="images/ui/frame.png" alt="">' : ''}</div>
       <div>
         <h2>${esc(p.ko)}</h2>
-        <div class="en">${esc(p.en)}${p.ro && p.ro !== p.en ? ' · 로마 ' + esc(p.ro) : ''}</div>
+        <div class="en">${esc(p.en)}${p.ro && p.ro !== p.en ? L(' · 로마 ', ' · Latin ') + esc(p.ro) : ''}</div>
         <span class="catb" style="background:${CAT_COLOR[p.cat]}">${catIcon[p.cat] ? `<img src="${catIcon[p.cat]}" alt="">` : ''}${esc(D.cats[p.cat])}</span>
       </div>
     </div>
     <div class="dom">${esc(p.dom)}</div>
     ${p.sym.length ? `<div class="syms">${p.sym.map(s => `<span>${esc(s)}</span>`).join('')}</div>` : ''}
     <div class="ep">${storyHTML(p)}</div>
-    ${p.al.length ? `<div class="aka">다른 이름 · ${p.al.map(esc).join(', ')}</div>` : ''}
-    <div class="rels">${relHTML || '<p class="note">표시할 관계가 없어요.</p>'}</div>
-    ${!state.withV && hidden ? `<p class="note">출처마다 다른 전승(이설)이 ${hidden}개 더 있어요. 관계도 위 '이설 보기'를 눌러 보세요.</p>` : ''}
-    ${state.withV && hidden ? `<p class="note">점선과 '이설' 표시는 출처에 따라 다르게 전해지는 관계예요.</p>` : ''}`;
+    ${p.al.length ? `<div class="aka">${L('다른 이름', 'Also known as')} · ${p.al.map(esc).join(', ')}</div>` : ''}
+    <div class="rels">${relHTML || `<p class="note">${L('표시할 관계가 없어요.', 'No links to show.')}</p>`}</div>
+    ${!state.withV && hidden ? `<p class="note">${L(`출처마다 다른 전승(이설)이 ${hidden}개 더 있어요. 관계도 위 '이설 보기'를 눌러 보세요.`, `There are ${hidden} more links told differently in other versions. Tap 'Other versions' above the map to see them.`)}</p>` : ''}
+    ${state.withV && hidden ? `<p class="note">${L("점선과 '이설' 표시는 출처에 따라 다르게 전해지는 관계예요.", "Dotted lines and 'alt' mark links that different writers tell differently.")}</p>` : ''}`;
   hydrateAv(panel);
   panel.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
   panel.classList.remove('hidden'); $('#main').classList.remove('nopanel');
@@ -1094,7 +1125,26 @@ const NAME_IDX = (() => {
 })();
 const PARTICLE = '은는이가을를의와과도로에만께한처보부까조랑야요라며나였인지예죠들';
 const isHan = c => c && /[가-힣]/.test(c);
+const EN_NAMES = EN_ON ? (() => {
+  const m = new Map(), dup = new Set();
+  const put = (n, id) => { if(n.length < 3) return; if(m.has(n) && m.get(n) !== id){ dup.add(n); return; } m.set(n, id); };
+  D.people.forEach(p => { put(p.ko, p.id); const b = p.ko.replace(/\s*\(.*?\)/g, '').trim(); if(b !== p.ko) put(b, p.id); const t = b.replace(/^The /, ''); if(t !== b) put(t, p.id); });
+  ['Ate', 'Iris', 'Nike', 'Hope'].forEach(n => dup.add(n));
+  dup.forEach(n => m.delete(n));
+  const names = [...m.keys()].sort((a, b) => b.length - a.length).map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  return {m, re:new RegExp('(^|[^A-Za-z])(' + names.join('|') + ')(?![A-Za-z])', 'g')};
+})() : null;
 function linkify(text, self, used){
+  if(EN_ON){
+    let out = '', last = 0;
+    text.replace(EN_NAMES.re, (all, pre, n, off) => {
+      const at = off + pre.length; out += esc(text.slice(last, at)); last = at + n.length;
+      const id = EN_NAMES.m.get(n);
+      if(id !== self && !used.has(id)){ used.add(id); out += `<button class="sl" data-go="${id}">${esc(n)}</button>`; } else out += esc(n);
+      return all;
+    });
+    return out + esc(text.slice(last));
+  }
   let out = '', i = 0;
   while(i < text.length){
     const c = text[i];
@@ -1122,7 +1172,7 @@ function storyHTML(p){
   if(!st) return esc(p.ep);
   const used = new Set();
   return st.s.map(([t, b]) => (t ? `<h4>${esc(t)}</h4>` : '') + `<p>${linkify(b, p.id, used)}</p>`).join('') +
-    (st.f ? `<div class="fact"><b>알고 있었니?</b>${linkify(st.f, p.id, used)}</div>` : '');
+    (st.f ? `<div class="fact"><b>${L('알고 있었니?', 'Did you know?')}</b>${linkify(st.f, p.id, used)}</div>` : '');
 }
 function renderPanelKeep(id, nb){ const st = panel.scrollTop, cls = panel.className; renderPanel(id, nb); panel.className = cls; panel.scrollTop = st; }
 function openPanel(){ panel.classList.remove('hidden', 'min'); }
@@ -1131,6 +1181,7 @@ function openPanel(){ panel.classList.remove('hidden', 'min'); }
 /* ---------- 방문 통계 (GoatCounter, 쿠키·개인정보 없음) ---------- */
 let lastTrack = '';
 function track(path, title){
+  if(EN_ON) path = '/en' + path;
   if(path === lastTrack) return; lastTrack = path;
   const send = () => { try { window.goatcounter.count({path, title: title || path}); } catch(e){} };
   if(window.goatcounter && window.goatcounter.count) send();
@@ -1147,7 +1198,7 @@ function go(id, push = true){
   if(push && location.hash.slice(1) !== id) history.pushState(null, '', '#' + id);
   hideTip();
   render(id, true);
-  document.title = P[id].ko + ' · 그리스 신화 관계도';
+  document.title = P[id].ko + ' · ' + APP_NAME;
 }
 function renderCrumbs(){
   const c = $('#crumbs');
@@ -1159,7 +1210,7 @@ function showHome(push = true){
   track('/', '첫 화면');
   state.cur = null; svg.innerHTML = ''; $('#toolbar').innerHTML = ''; $('#crumbs').innerHTML = '';
   panel.classList.add('hidden'); $('#main').classList.add('nopanel'); $('#welcome').style.display = '';
-  document.title = '그리스 신화 관계도';
+  document.title = APP_NAME;
   if(push) history.pushState(null, '', location.pathname);
 }
 $('#home').onclick = () => showHome();
@@ -1173,9 +1224,9 @@ function drawSuggest(){
   $('#qclear').classList.toggle('on', !!v);
   if(!v.trim()){ sgBox.classList.remove('on'); sgItems = []; return; }
   sgItems = search(v, 8); sgAct = sgItems.length ? 0 : -1;
-  if(!sgItems.length){ sgBox.innerHTML = `<div class="hint">'${esc(v)}'와 비슷한 인물을 찾지 못했어요. 다른 표기나 초성으로 찾아보세요.</div>`; sgBox.classList.add('on'); return; }
+  if(!sgItems.length){ sgBox.innerHTML = `<div class="hint">${L(`'${esc(v)}'와 비슷한 인물을 찾지 못했어요. 다른 표기나 초성으로 찾아보세요.`, `No one found like '${esc(v)}'. Try another spelling.`)}</div>`; sgBox.classList.add('on'); return; }
   const fuzzyOnly = sgItems.every(r => r.s < 66);
-  sgBox.innerHTML = (fuzzyOnly ? `<div class="hint">혹시 이 인물을 찾으세요?</div>` : '') + sgItems.map((r, i) =>
+  sgBox.innerHTML = (fuzzyOnly ? `<div class="hint">${L('혹시 이 인물을 찾으세요?', 'Did you mean...?')}</div>` : '') + sgItems.map((r, i) =>
     `<div class="sg${i === sgAct ? ' act' : ''}" role="option" id="sg${i}" data-i="${i}">${avHTML(r.p, 40)}<div class="tx"><div class="nm">${highlight(r.p.ko, v)}</div><div class="sub">${esc(D.cats[r.p.cat])} · ${esc(r.p.dom)}</div></div>${r.why ? `<span class="why">${esc(r.why)}</span>` : ''}</div>`).join('');
   hydrateAv(sgBox);
   sgBox.classList.add('on');
@@ -1242,7 +1293,7 @@ function drawList(){
     if(!list.length) return '';
     return `<h3><span class="dot" style="display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid #3A3739;background:${CAT_COLOR[c]}"></span>${esc(D.cats[c])} <small style="font-family:var(--font);font-size:13px;color:var(--muted)">${list.length}</small></h3><div class="grid">` +
       list.map(p => `<button data-go="${p.id}">${avHTML(p, 32)}<span>${esc(p.ko)}</span></button>`).join('') + '</div>';
-  }).join('') || '<p class="note">찾는 인물이 없어요.</p>';
+  }).join('') || `<p class="note">${L('찾는 인물이 없어요.', 'No one by that name.')}</p>`;
   hydrateAv($('#mbody'));
   $('#mbody').querySelectorAll('[data-go]').forEach(b => b.onclick = () => { closeList(); go(b.dataset.go); });
 }
@@ -1314,7 +1365,7 @@ const Sound = (() => {
   };
   function setOn(v, init){
     on = v; try { localStorage.setItem('myth.sound', v ? '1' : '0'); } catch(e){}
-    document.querySelectorAll('.sndbtn').forEach(b => { b.classList.toggle('off', !v); b.title = v ? '소리 끄기' : '소리 켜기'; b.setAttribute('aria-pressed', v ? 'true' : 'false'); });
+    document.querySelectorAll('.sndbtn').forEach(b => { b.classList.toggle('off', !v); b.title = v ? L('소리 끄기', 'Sound off') : L('소리 켜기', 'Sound on'); b.setAttribute('aria-pressed', v ? 'true' : 'false'); });
     if(init) return;
     if(v){ unlocked = true; start(); } else stopCur();
   }
@@ -1334,11 +1385,12 @@ const LS = {
   set(k, v){ try { localStorage.setItem('myth.' + k, JSON.stringify(v)); } catch(e){} }
 };
 const hasJong = s => { const c = (s || '').replace(/\(.*?\)/g, '').trim().slice(-1).charCodeAt(0); return c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; };
-const josa = (s, a, b) => s + (hasJong(s) ? a : b); // josa('제우스','을','를')
+const josa = (s, a, b) => s + (hasJong(s) ? a : b);
+const CH = n => L(`${n}장`, `Chapter ${n}`); // josa('제우스','을','를')
 const nm = id => P[id].ko;
 const shuffle = a => { for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pickOne = a => a[Math.floor(Math.random() * a.length)];
-const BOOK_SKIP = new Set(['아이올로스']); // 이야기책 속 동명이인
+const BOOK_SKIP = new Set([L('아이올로스', 'Aeolus')]); // 이야기책 속 동명이인
 function linkBook(text, used){
   let t = text; const keep = [];
   BOOK_SKIP.forEach(n => { t = t.split(n).join('\u0001' + keep.push(n) + '\u0002'); });
@@ -1355,7 +1407,7 @@ function sceneFigure(ch, i, opts = {}){
   const fs = who.length <= 1 ? 150 : who.length === 2 ? 118 : who.length === 3 ? 100 : 84;
   const el = document.createElement('figure');
   el.className = 'scene soon';
-  el.innerHTML = `<div class="pic" style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 75%)"><div class="faces" style="--fs:${fs}px">${who.map(id => avHTML(P[id], 90)).join('')}</div></div>${b && b.cap && !opts.nocap ? `<figcaption>${esc(b.cap === '장 표지' ? ch.t : b.cap)}</figcaption>` : ''}`;
+  el.innerHTML = `<div class="pic" style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 75%)"><div class="faces" style="--fs:${fs}px">${who.map(id => avHTML(P[id], 90)).join('')}</div></div>${b && b.cap && !opts.nocap ? `<figcaption>${esc(b.cover || b.cap === '장 표지' ? ch.t : b.cap)}</figcaption>` : ''}`;
   hydrateAv(el);
   const put = () => { const img = new Image(); img.className = 'full'; img.alt = b ? b.cap : ''; img.width = 1200; img.height = 900; img.decoding = 'async'; img.src = f; el.querySelector('.pic').appendChild(img); el.classList.remove('soon'); };
   const load = () => {
@@ -1376,7 +1428,7 @@ function hideBackPill(){ backPill.classList.remove('on'); backTo = null; }
 function leaveTo(kind, id){
   closeOverlays();
   backTo = kind;
-  backPill.innerHTML = kind === 'time' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><circle cx="6" cy="6" r="2.2" fill="var(--gold)"/><circle cx="6" cy="12.5" r="2.2" fill="var(--gold)"/><circle cx="6" cy="19" r="2.2" fill="var(--gold)"/><path d="M11 6h9M11 12.5h7M11 19h9"/></svg>타임라인으로 돌아가기' : kind === 'book' ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg>이야기책으로 돌아가기' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>퀴즈로 돌아가기';
+  backPill.innerHTML = kind === 'time' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><circle cx="6" cy="6" r="2.2" fill="var(--gold)"/><circle cx="6" cy="12.5" r="2.2" fill="var(--gold)"/><circle cx="6" cy="19" r="2.2" fill="var(--gold)"/><path d="M11 6h9M11 12.5h7M11 19h9"/></svg>' + L('타임라인으로 돌아가기', 'Back to the timeline') : kind === 'book' ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg>' + L('이야기책으로 돌아가기', 'Back to the storybook') : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 1 1 3.7 2.6c-.6.3-1 .8-1 1.5v.7M12 17.2v.1"/></svg>' + L('퀴즈로 돌아가기', 'Back to the quiz');
   backPill.classList.add('on');
   go(id);
 }
@@ -1384,30 +1436,30 @@ function wireLinks(root, kind){ root.querySelectorAll('[data-go]').forEach(b => 
 const ovBook = $('#ovBook'), ovQuiz = $('#ovQuiz'), ovTime = $('#ovTime');
 function closeOverlays(){ ovBook.classList.remove('on'); ovQuiz.classList.remove('on'); ovTime.classList.remove('on'); Sound.scene('main'); }
 function setHash(h){ if(location.hash.slice(1) !== h) history.pushState(null, '', '#' + h); }
-function closeToGraph(){ closeOverlays(); if(state.cur) history.pushState(null, '', '#' + state.cur); else history.pushState(null, '', location.pathname); document.title = state.cur ? P[state.cur].ko + ' · 그리스 신화 관계도' : '그리스 신화 관계도'; }
+function closeToGraph(){ closeOverlays(); if(state.cur) history.pushState(null, '', '#' + state.cur); else history.pushState(null, '', location.pathname); document.title = state.cur ? P[state.cur].ko + ' · ' + APP_NAME : APP_NAME; }
 
 /* ---------- 이야기책 ---------- */
 const bookBody = $('#bookBody');
 let bookView = null; // null=목차, 숫자=장 번호
 let saveTimer = 0;
 function openBook(view){
-  hideBackPill(); ovQuiz.classList.remove('on'); ovTime.classList.remove('on'); ovBook.classList.add('on'); setHash('book'); document.title = '이야기책 · 그리스 신화 관계도';
+  hideBackPill(); ovQuiz.classList.remove('on'); ovTime.classList.remove('on'); ovBook.classList.add('on'); setHash('book'); document.title = L('이야기책', 'Storybook') + ' · ' + APP_NAME;
   if(view !== undefined) bookView = view;
   if(bookView == null) drawToc(); else drawChapter(bookView, true);
 }
 function drawToc(){
-  track('/이야기책', '이야기책 차례');
+  track('/이야기책', L('이야기책 차례', 'Storybook contents'));
   bookView = null; Sound.scene('main');
-  $('#bookTitle').textContent = '그리스 신화 이야기책';
+  $('#bookTitle').textContent = L('그리스 신화 이야기책', 'Greek Myths Storybook');
   const prog = LS.get('book', {});
   const done = new Set(prog.done || []);
-  bookBody.innerHTML = `<div class="wrap"><div class="bk-hero"><h3>처음부터 차례차례</h3><p>세상의 시작부터 영웅들의 귀향까지, 16개 장</p>${prog.ch ? `<button class="pillbtn pri" id="bkCont">${prog.ch}장 「${esc(BOOK[prog.ch - 1].t)}」 이어 읽기</button>` : `<button class="pillbtn pri" id="bkCont">1장부터 읽기</button>`}</div><div class="toc" id="toc"></div></div>`;
+  bookBody.innerHTML = `<div class="wrap"><div class="bk-hero"><h3>${L('처음부터 차례차례', 'From the very beginning')}</h3><p>${L('세상의 시작부터 영웅들의 귀향까지, 16개 장', 'From the birth of the world to the heroes coming home, in 16 chapters')}</p>${prog.ch ? `<button class="pillbtn pri" id="bkCont">${L(`${prog.ch}장 「${esc(BOOK[prog.ch - 1].t)}」 이어 읽기`, `Carry on: ${CH(prog.ch)}, “${esc(BOOK[prog.ch - 1].t)}”`)}</button>` : `<button class="pillbtn pri" id="bkCont">${L('1장부터 읽기', 'Start with Chapter 1')}</button>`}</div><div class="toc" id="toc"></div></div>`;
   const toc = $('#toc');
   BOOK.forEach(ch => {
     const b = document.createElement('button');
     b.appendChild(sceneFigure(ch, 0, {nocap:true, max:4}));
     const ti = document.createElement('div'); ti.className = 'ti';
-    ti.innerHTML = `${done.has(ch.n) ? '<span class="done">다 읽음</span>' : ''}<small>${ch.n}장</small><b>${esc(ch.t)}</b><small>${esc(ch.sub)}</small>`;
+    ti.innerHTML = `${done.has(ch.n) ? `<span class="done">${L('다 읽음', 'Read')}</span>` : ''}<small>${CH(ch.n)}</small><b>${esc(ch.t)}</b><small>${esc(ch.sub)}</small>`;
     b.appendChild(ti);
     b.onclick = () => drawChapter(ch.n);
     toc.appendChild(b);
@@ -1418,21 +1470,21 @@ function drawToc(){
 function drawChapter(n, restore){
   const ch = BOOK[n - 1]; if(!ch) return drawToc();
   if(bookView !== n && !restore) Sound.sfx.page();
-  bookView = n; Sound.chapter(n); track('/이야기책/' + n + '장', n + '장 ' + ch.t);
-  $('#bookTitle').textContent = `${n}장 · ${ch.t}`;
+  bookView = n; Sound.chapter(n); track('/이야기책/' + n + '장', CH(n) + ' ' + ch.t);
+  $('#bookTitle').textContent = `${CH(n)} · ${ch.t}`;
   const wrap = document.createElement('div'); wrap.className = 'wrap chap';
-  wrap.innerHTML = `<div class="no">${n}장</div><h3>${esc(ch.t)}</h3><p class="sub">${esc(ch.sub)}</p>`;
+  wrap.innerHTML = `<div class="no">${CH(n)}</div><h3>${esc(ch.t)}</h3><p class="sub">${esc(ch.sub)}</p>`;
   const used = new Set();
   ch.b.forEach(b => {
     if(b.k === 'img') wrap.appendChild(sceneFigure(ch, b.i));
     else if(b.k === 'who'){
       const p = P[b.id]; const w = document.createElement('button'); w.className = 'who'; w.dataset.go = b.id;
-      w.innerHTML = `${avHTML(p, 58)}<span><b>${esc(p.ko)}</b><small>${esc(D.cats[p.cat])} · ${esc(p.dom)}</small></span><span class="go">관계도 ›</span>`;
+      w.innerHTML = `${avHTML(p, 58)}<span><b>${esc(p.ko)}</b><small>${esc(D.cats[p.cat])} · ${esc(p.dom)}</small></span><span class="go">${L('관계도 ›', 'Map ›')}</span>`;
       wrap.appendChild(w);
     } else { const el = document.createElement('p'); el.className = 'tx'; el.innerHTML = linkBook(b.t, used); wrap.appendChild(el); }
   });
   const end = document.createElement('div'); end.className = 'chend';
-  end.innerHTML = `<p>${n}장을 다 읽었어요! 얼마나 기억하는지 퀴즈로 확인해 볼까요?</p><div class="row"><button class="pillbtn navy" id="chQuiz">${n}장 퀴즈 풀기</button>${n > 1 ? `<button class="pillbtn" id="chPrev">‹ ${n - 1}장</button>` : ''}${n < BOOK.length ? `<button class="pillbtn pri" id="chNext">${n + 1}장 「${esc(BOOK[n].t)}」 ›</button>` : ''}<button class="pillbtn" id="chToc">차례</button></div>`;
+  end.innerHTML = `<p>${L(`${n}장을 다 읽었어요! 얼마나 기억하는지 퀴즈로 확인해 볼까요?`, `You have finished ${CH(n)}! Shall we see how much you remember with a quiz?`)}</p><div class="row"><button class="pillbtn navy" id="chQuiz">${L(`${n}장 퀴즈 풀기`, `${CH(n)} quiz`)}</button>${n > 1 ? `<button class="pillbtn" id="chPrev">‹ ${CH(n - 1)}</button>` : ''}${n < BOOK.length ? `<button class="pillbtn pri" id="chNext">${CH(n + 1)} “${esc(BOOK[n].t)}” ›</button>` : ''}<button class="pillbtn" id="chToc">${L('차례', 'Contents')}</button></div>`;
   wrap.appendChild(end);
   bookBody.innerHTML = ''; bookBody.appendChild(wrap);
   hydrateAv(wrap);
@@ -1462,27 +1514,27 @@ $('#bookToc').onclick = drawToc;
 
 /* ---------- 퀴즈 ---------- */
 const quizBody = $('#quizBody');
-const LEVELS = {easy:{t:'쉬움', d:'이야기책 주인공들', mul:1}, normal:{t:'보통', d:'이름난 신·영웅·괴물', mul:2}, hard:{t:'어려움', d:'392명 전부', mul:3}};
-const MODE_NAME = k => k.startsWith('ch') ? `${k.slice(2)}장 퀴즈` : `자유 퀴즈 · ${LEVELS[k.slice(5)].t}`;
+const LEVELS = {easy:{t:L('쉬움', 'Easy'), d:L('이야기책 주인공들', 'Storybook heroes'), mul:1}, normal:{t:L('보통', 'Medium'), d:L('이름난 신·영웅·괴물', 'Famous gods, heroes and monsters'), mul:2}, hard:{t:L('어려움', 'Hard'), d:L('392명 전부', 'All 392 characters'), mul:3}};
+const MODE_NAME = k => k.startsWith('ch') ? L(`${k.slice(2)}장 퀴즈`, `${CH(k.slice(2))} quiz`) : `${L('자유 퀴즈', 'Free quiz')} · ${LEVELS[k.slice(5)].t}`;
 let quiz = null; // 진행 중인 퀴즈
 function openQuiz(){
-  hideBackPill(); ovBook.classList.remove('on'); ovTime.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); document.title = '퀴즈 · 그리스 신화 관계도';
+  hideBackPill(); ovBook.classList.remove('on'); ovTime.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); document.title = L('퀴즈', 'Quiz') + ' · ' + APP_NAME;
   Sound.scene('quiz');
   if(quiz && !quiz.over) drawQ(); else drawQuizHome();
 }
 function hofGet(){ return LS.get('hof', {}); }
 function bestOf(mode){ const l = hofGet()[mode]; return l && l.length ? l[0].s : null; }
 function drawQuizHome(tab){
-  track('/퀴즈', '퀴즈 처음');
+  track('/퀴즈', L('퀴즈 처음', 'Quiz home'));
   quiz = null; Sound.scene('quiz');
-  $('#quizTitle').textContent = '신화 퀴즈';
+  $('#quizTitle').textContent = L('신화 퀴즈', 'Myth Quiz');
   const hof = hofGet();
   const tabs = ['free-easy','free-normal','free-hard', ...BOOK.map(c => 'ch' + c.n)];
   const cur = tab || LS.get('hofTab', 'free-easy');
   quizBody.innerHTML = `<div class="wrap">
-    <div class="qz-sec"><h3>자유 퀴즈 · 10문제</h3><div class="lv">${Object.entries(LEVELS).map(([k, v]) => `<button data-lv="${k}"><b>${v.t}</b><small>${v.d}<br>최고 ${bestOf('free-' + k) ?? '-'}점</small></button>`).join('')}</div></div>
-    <div class="qz-sec"><h3>장 퀴즈 · 5문제</h3><div class="chq">${BOOK.map(c => `<button data-ch="${c.n}">${c.n}장 ${esc(c.t)}<small>최고 ${bestOf('ch' + c.n) ?? '-'}점</small></button>`).join('')}</div></div>
-    <div class="qz-sec"><h3>명예의 전당</h3><div class="hof"><div class="tabs">${tabs.map(k => `<button data-tab="${k}" class="${k === cur ? 'on' : ''}">${k.startsWith('ch') ? k.slice(2) + '장' : LEVELS[k.slice(5)].t}</button>`).join('')}</div>${hofList(cur)}</div></div>
+    <div class="qz-sec"><h3>${L('자유 퀴즈 · 10문제', 'Free quiz · 10 questions')}</h3><div class="lv">${Object.entries(LEVELS).map(([k, v]) => `<button data-lv="${k}"><b>${v.t}</b><small>${v.d}<br>${L('최고', 'Best')} ${bestOf('free-' + k) ?? '-'}${L('점', ' pts')}</small></button>`).join('')}</div></div>
+    <div class="qz-sec"><h3>${L('장 퀴즈 · 5문제', 'Chapter quizzes · 5 questions')}</h3><div class="chq">${BOOK.map(c => `<button data-ch="${c.n}">${CH(c.n)} ${esc(c.t)}<small>${L('최고', 'Best')} ${bestOf('ch' + c.n) ?? '-'}${L('점', ' pts')}</small></button>`).join('')}</div></div>
+    <div class="qz-sec"><h3>${L('명예의 전당', 'Hall of Fame')}</h3><div class="hof"><div class="tabs">${tabs.map(k => `<button data-tab="${k}" class="${k === cur ? 'on' : ''}">${k.startsWith('ch') ? L(k.slice(2) + '장', 'Ch. ' + k.slice(2)) : LEVELS[k.slice(5)].t}</button>`).join('')}</div>${hofList(cur)}</div></div>
   </div>`;
   quizBody.querySelectorAll('[data-lv]').forEach(b => b.onclick = () => startQuiz({kind:'free', lv:b.dataset.lv}));
   quizBody.querySelectorAll('[data-ch]').forEach(b => b.onclick = () => startQuiz({kind:'ch', n:+b.dataset.ch}));
@@ -1492,8 +1544,8 @@ function drawQuizHome(tab){
 }
 function hofList(mode, me){
   const l = hofGet()[mode] || [];
-  if(!l.length) return `<div class="empty">${esc(MODE_NAME(mode))}에 아직 새겨진 이름이 없어요. 첫 번째 주인공이 되어 보세요!</div>`;
-  return `<ol>${l.map((r, i) => `<li class="${me && me === r.at ? 'me' : ''}"><span class="rk">${i + 1}</span><span class="nm">${esc(r.n)}</span><span class="sc">${r.s}점</span><span class="dt">${esc(r.d)}</span></li>`).join('')}</ol>`;
+  if(!l.length) return `<div class="empty">${L(`${esc(MODE_NAME(mode))}에 아직 새겨진 이름이 없어요. 첫 번째 주인공이 되어 보세요!`, `No names on the ${esc(MODE_NAME(mode))} board yet. Be the first!`)}</div>`;
+  return `<ol>${l.map((r, i) => `<li class="${me && me === r.at ? 'me' : ''}"><span class="rk">${i + 1}</span><span class="nm">${esc(r.n)}</span><span class="sc">${r.s}${L('점', ' pts')}</span><span class="dt">${esc(r.d)}</span></li>`).join('')}</ol>`;
 }
 
 // 자유 퀴즈 문제 만들기
@@ -1536,19 +1588,19 @@ function mkQ(lv, pool, usedIds){
     const p = P[id];
     let q, ans, bad = [], img = null, e, showFaces = true, subj = id;
     if(ty === 'face'){
-      q = '이 초상화의 주인공은 누구일까요?'; ans = id; img = id; showFaces = false;
+      q = L('이 초상화의 주인공은 누구일까요?', 'Who is in this portrait?'); ans = id; img = id; showFaces = false;
       e = withName(id);
     } else if(ty === 'sym'){
       if(!p.sym || !p.sym.length) continue;
       const s = pickOne(p.sym);
       bad = D.people.filter(x => (x.sym || []).includes(s)).map(x => x.id);
       if(bad.length > 2) continue;
-      q = `「${s}」${hasJong(s) ? '이' : '가'} 상징인 인물은 누구일까요?`; ans = id;
-      e = `${p.ko}의 상징은 ${p.sym.join(', ')}${hasJong(p.sym[p.sym.length - 1]) ? '이에요' : '예요'}. ${firstLine(id)}`;
+      q = L(`「${s}」${hasJong(s) ? '이' : '가'} 상징인 인물은 누구일까요?`, `Whose symbol is the ${s}?`); ans = id;
+      e = L(`${p.ko}의 상징은 ${p.sym.join(', ')}${hasJong(p.sym[p.sym.length - 1]) ? '이에요' : '예요'}. `, `${p.ko}'s symbols: ${p.sym.join(', ')}. `) + firstLine(id);
     } else if(ty === 'dom'){
       if(!p.dom) continue;
       bad = D.people.filter(x => x.dom === p.dom).map(x => x.id);
-      q = `「${p.dom}」, 누구일까요?`; ans = id;
+      q = L(`「${p.dom}」, 누구일까요?`, `"${p.dom}" - who is this?`); ans = id;
       e = withName(id);
     } else {
       const list = REL[ty](id).filter(x => P[x] && P[x].cat !== 'grp' && P[x].cat !== 'art');
@@ -1556,11 +1608,11 @@ function mkQ(lv, pool, usedIds){
       if(!inPool.length) continue;
       ans = pickOne(inPool); bad = list;
       const who = p.ko;
-      if(ty === 'par') q = `${josa(who, '의', '의')} 부모 가운데 한 명은 누구일까요?`, e = `${who}의 부모: ${list.map(nm).join(', ')}.`;
-      if(ty === 'chi') q = `${who}의 자녀는 누구일까요?`, e = `${who}의 자녀로는 ${list.slice(0, 6).map(nm).join(', ')}${list.length > 6 ? ' 등이' : (hasJong(nm(list[Math.min(list.length, 6) - 1])) ? '이' : '가')} 있어요.`;
-      if(ty === 'spo') q = `${who}의 배우자는 누구일까요?`, e = `${who}의 배우자: ${list.map(nm).join(', ')}.`;
-      if(ty === 'won') q = `${josa(who, '과', '와')} 싸워 이긴 인물은 누구일까요?`, e = `${josa(who, '을', '를')} 물리친 인물: ${list.map(nm).join(', ')}.`;
-      if(ty === 'sib') q = `${who}의 형제자매는 누구일까요?`, e = `${who}의 형제자매로는 ${list.slice(0, 6).map(nm).join(', ')}${list.length > 6 ? ' 등이' : (hasJong(nm(list[Math.min(list.length, 6) - 1])) ? '이' : '가')} 있어요.`;
+      if(ty === 'par') q = L(`${josa(who, '의', '의')} 부모 가운데 한 명은 누구일까요?`, `Who is one of ${who}'s parents?`), e = L(`${who}의 부모: `, `${who}'s parents: `) + `${list.map(nm).join(', ')}.`;
+      if(ty === 'chi') q = L(`${who}의 자녀는 누구일까요?`, `Which of these is a child of ${who}?`), e = L(`${who}의 자녀로는 ${list.slice(0, 6).map(nm).join(', ')}${list.length > 6 ? ' 등이' : (hasJong(nm(list[Math.min(list.length, 6) - 1])) ? '이' : '가')} 있어요.`, `${who}'s children include ${list.slice(0, 6).map(nm).join(', ')}${list.length > 6 ? ' and more' : ''}.`);
+      if(ty === 'spo') q = L(`${who}의 배우자는 누구일까요?`, `Who was married to ${who}?`), e = L(`${who}의 배우자: `, `${who}'s spouse: `) + `${list.map(nm).join(', ')}.`;
+      if(ty === 'won') q = L(`${josa(who, '과', '와')} 싸워 이긴 인물은 누구일까요?`, `Who defeated ${who}?`), e = L(`${josa(who, '을', '를')} 물리친 인물: `, `${who} was defeated by: `) + `${list.map(nm).join(', ')}.`;
+      if(ty === 'sib') q = L(`${who}의 형제자매는 누구일까요?`, `Which of these is a brother or sister of ${who}?`), e = L(`${who}의 형제자매로는 ${list.slice(0, 6).map(nm).join(', ')}${list.length > 6 ? ' 등이' : (hasJong(nm(list[Math.min(list.length, 6) - 1])) ? '이' : '가')} 있어요.`, `${who}'s brothers and sisters include ${list.slice(0, 6).map(nm).join(', ')}${list.length > 6 ? ' and more' : ''}.`);
       e += ' ' + firstLine(ans);
     }
     const ds = distract(ans, pool.length > 20 ? pool : D.people.map(x => x.id), bad, 3, ty === 'dom');
@@ -1592,13 +1644,13 @@ function startQuiz(cfg){
   ovBook.classList.remove('on'); ovQuiz.classList.add('on'); setHash('quiz'); hideBackPill(); Sound.scene('quiz');
   drawQ();
 }
-const PRAISE = ['정답이에요!', '딩동댕!', '대단해요!', '척척박사네요!', '완벽해요!', '신들도 깜짝 놀라겠어요!'];
-const OOPS = ['아쉬워요!', '괜찮아요, 다음엔 맞힐 거예요!', '앗, 헷갈렸죠?', '다음 문제는 꼭 맞혀 봐요!'];
+const PRAISE = L(['정답이에요!', '딩동댕!', '대단해요!', '척척박사네요!', '완벽해요!', '신들도 깜짝 놀라겠어요!'], ['Correct!', 'Well done!', 'Brilliant!', 'Clever you!', 'Perfect!', 'Even the gods are impressed!']);
+const OOPS = L(['아쉬워요!', '괜찮아요, 다음엔 맞힐 거예요!', '앗, 헷갈렸죠?', '다음 문제는 꼭 맞혀 봐요!'], ['So close!', 'Never mind, you will get the next one!', 'Oops, that was a tricky one!', 'Have a go at the next one!']);
 function drawQ(){
   const z = quiz, x = z.qs[z.i];
   $('#quizTitle').textContent = MODE_NAME(z.mode);
   const w = document.createElement('div'); w.className = 'wrap qp';
-  w.innerHTML = `<div class="top"><div class="dots">${z.qs.map((_, k) => `<i class="${k < z.i ? (z.res[k] ? 'ok' : 'no') : k === z.i ? 'cur' : ''}"></i>`).join('')}</div>${z.combo >= 2 ? `<span class="combo">${z.combo}연속!</span>` : ''}<span class="score">${z.score}점</span></div>`;
+  w.innerHTML = `<div class="top"><div class="dots">${z.qs.map((_, k) => `<i class="${k < z.i ? (z.res[k] ? 'ok' : 'no') : k === z.i ? 'cur' : ''}"></i>`).join('')}</div>${z.combo >= 2 ? `<span class="combo">${L(`${z.combo}연속!`, `${z.combo} in a row!`)}</span>` : ''}<span class="score">${z.score}${L('점', ' pts')}</span></div>`;
   if(x.img){ const d = document.createElement('div'); d.className = 'qimg'; d.innerHTML = avHTML(P[x.img], 220); w.appendChild(d); }
   else if(x.scene != null) w.appendChild(sceneFigure(BOOK[z.cfg.n - 1], x.scene, {max:4}));
   const q = document.createElement('div'); q.className = 'q'; q.textContent = `${z.i + 1}. ${x.q}`; w.appendChild(q);
@@ -1628,11 +1680,11 @@ function showFb(w, x){
   const ok = x.picked === x.a;
   w.querySelectorAll('.opts button').forEach((b, k) => { if(k === x.a) b.classList.add('ok'); else if(k === x.picked) b.classList.add('no'); });
   const fb = document.createElement('div'); fb.className = 'fb' + (ok ? '' : ' no'); fb.setAttribute('role', 'status'); fb.setAttribute('aria-live', 'polite');
-  fb.innerHTML = `<b>${esc(x.msg)}</b>${ok ? '' : `정답은 「${esc(x.o[x.a])}」예요. `}${linkBook(x.e, new Set())}`;
+  fb.innerHTML = `<b>${esc(x.msg)}</b>${ok ? '' : L(`정답은 「${esc(x.o[x.a])}」예요. `, `The answer is "${esc(x.o[x.a])}". `)}${linkBook(x.e, new Set())}`;
   w.appendChild(fb);
   const nx = document.createElement('button'); nx.className = 'pillbtn navy next';
   const last = quiz.i === quiz.qs.length - 1;
-  nx.textContent = last ? '결과 보기' : '다음 문제';
+  nx.textContent = last ? L('결과 보기', 'See my score') : L('다음 문제', 'Next question');
   nx.onclick = () => { if(last) finish(); else { quiz.i++; drawQ(); } };
   w.appendChild(nx);
   wireLinks(fb, 'quiz');
@@ -1640,27 +1692,27 @@ function showFb(w, x){
 function finish(){
   const z = quiz; z.over = true; Sound.sfx.fanfare();
   const right = z.res.filter(Boolean).length, n = z.qs.length;
-  const msg = right === n ? '만점! 신화 박사 인정!' : right >= n * 0.8 ? '아주 잘했어요!' : right >= n * 0.5 ? '좋아요, 조금만 더!' : '이야기책을 한 번 더 읽어 볼까요?';
+  const msg = right === n ? L('만점! 신화 박사 인정!', 'Full marks! You are a true myth expert!') : right >= n * 0.8 ? L('아주 잘했어요!', 'Wonderful work!') : right >= n * 0.5 ? L('좋아요, 조금만 더!', 'Good going, nearly there!') : L('이야기책을 한 번 더 읽어 볼까요?', 'Shall we read the storybook again?');
   const star = z.mode.startsWith('ch') ? (BOOK[z.cfg.n - 1].b.find(b => b.k === 'who') || {}).id : z.qs[0].ids[z.qs[0].a];
   const w = document.createElement('div'); w.className = 'wrap qr';
   const lastName = LS.get('lastName', '');
-  const wrong = z.qs.map((x, k) => z.res[k] ? '' : `<div><b>${esc(x.q)}</b><br>정답: ${esc(x.o[x.a])}</div>`).join('');
-  w.innerHTML = `${star && P[star] ? `<div class="stamp">${avHTML(P[star], 200)}</div>` : ''}<div class="big">${z.score}점</div><div class="msg">${n}문제 중 ${right}문제 정답 · ${msg}</div>
-    <form id="hofForm"><input id="hofName" maxlength="10" placeholder="이름을 새겨 주세요" value="${esc(lastName)}" autocomplete="off"><button class="pillbtn navy" type="submit">이름 새기기</button></form>
+  const wrong = z.qs.map((x, k) => z.res[k] ? '' : `<div><b>${esc(x.q)}</b><br>${L('정답', 'Answer')}: ${esc(x.o[x.a])}</div>`).join('');
+  w.innerHTML = `${star && P[star] ? `<div class="stamp">${avHTML(P[star], 200)}</div>` : ''}<div class="big">${z.score}${L('점', ' pts')}</div><div class="msg">${L(`${n}문제 중 ${right}문제 정답`, `${right} out of ${n} correct`)} · ${msg}</div>
+    <form id="hofForm"><input id="hofName" maxlength="10" placeholder="${L('이름을 새겨 주세요', 'Write your name')}" value="${esc(lastName)}" autocomplete="off"><button class="pillbtn navy" type="submit">${L('이름 새기기', 'Carve my name')}</button></form>
     <div id="hofBox"></div>
-    <div class="row"><button class="pillbtn pri" id="qAgain">다시 풀기</button>${z.mode.startsWith('ch') && z.cfg.n < BOOK.length ? `<button class="pillbtn" id="qNextCh">${z.cfg.n + 1}장 읽으러 가기</button>` : ''}<button class="pillbtn" id="qHome">퀴즈 처음으로</button></div>
-    ${wrong ? `<div class="wrong"><h4>틀린 문제 다시 보기</h4>${wrong}</div>` : ''}`;
+    <div class="row"><button class="pillbtn pri" id="qAgain">${L('다시 풀기', 'Play again')}</button>${z.mode.startsWith('ch') && z.cfg.n < BOOK.length ? `<button class="pillbtn" id="qNextCh">${L(`${z.cfg.n + 1}장 읽으러 가기`, `Read ${CH(z.cfg.n + 1)}`)}</button>` : ''}<button class="pillbtn" id="qHome">${L('퀴즈 처음으로', 'Quiz home')}</button></div>
+    ${wrong ? `<div class="wrong"><h4>${L('틀린 문제 다시 보기', 'Questions to look at again')}</h4>${wrong}</div>` : ''}`;
   quizBody.innerHTML = ''; quizBody.appendChild(w); hydrateAv(w); quizBody.scrollTop = 0;
   $('#hofBox').innerHTML = `<div class="hof">${hofList(z.mode)}</div>`;
   $('#hofForm').onsubmit = e => {
     e.preventDefault();
-    const name = $('#hofName').value.trim().slice(0, 10) || '이름 없는 영웅';
+    const name = $('#hofName').value.trim().slice(0, 10) || L('이름 없는 영웅', 'Nameless Hero');
     LS.set('lastName', name);
     const hof = hofGet(); const l = hof[z.mode] || [];
     const d = new Date(); const at = Date.now();
     l.push({n:name, s:z.score, d:`${d.getMonth() + 1}/${d.getDate()}`, at});
     l.sort((a, b) => b.s - a.s || a.at - b.at); hof[z.mode] = l.slice(0, 10); LS.set('hof', hof);
-    $('#hofForm').outerHTML = hof[z.mode].some(r => r.at === at) ? `<p class="msg">명예의 전당에 「${esc(name)}」 이름이 새겨졌어요!</p>` : `<p class="msg">아쉽게 10위 안에 들지 못했어요. 다시 도전해 봐요!</p>`;
+    $('#hofForm').outerHTML = hof[z.mode].some(r => r.at === at) ? `<p class="msg">${L(`명예의 전당에 「${esc(name)}」 이름이 새겨졌어요!`, `"${esc(name)}" is now carved in the Hall of Fame!`)}</p>` : `<p class="msg">${L('아쉽게 10위 안에 들지 못했어요. 다시 도전해 봐요!', 'Not quite in the top 10 this time. Have another go!')}</p>`;
     $('#hofBox').innerHTML = `<div class="hof">${hofList(z.mode, at)}</div>`;
     LS.set('hofTab', z.mode);
   };
@@ -1680,7 +1732,7 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape' && (ovBook.cla
 /* ---------- 처음 방문 안내 (한 번만) ---------- */
 function showTip2(text, target, place, done){
   const t = document.createElement('div'); t.className = 'tipb ' + (place === 'below' ? 'up' : 'down'); t.setAttribute('role', 'status');
-  t.innerHTML = `<span>${text}</span><button type="button">알겠어요</button>`;
+  t.innerHTML = `<span>${text}</span><button type="button">${L('알겠어요', 'Got it')}</button>`;
   document.body.appendChild(t);
   const r = target.getBoundingClientRect(), w = t.offsetWidth, h = t.offsetHeight;
   const cx = r.left + r.width / 2, left = Math.max(12, Math.min(innerWidth - w - 12, cx - w / 2));
@@ -1693,9 +1745,9 @@ function firstVisitTips(){
   if(LS.get('tips', 0)) return; LS.set('tips', 1);
   setTimeout(() => {
     const c = document.querySelector('#graph .node.center'); if(!c) return;
-    showTip2('다른 인물을 누르면 그 인물이 가운데로 와요. 두 손가락으로 확대할 수 있어요.', c, 'below', () => {
-      if(innerWidth <= 900){ const g = document.querySelector('.panel .grab'); if(g && !panel.classList.contains('hidden')) showTip2('아래 창을 위로 끌어 올리면 이 인물의 이야기를 읽을 수 있어요.', g, 'above'); }
-      else if(!panel.classList.contains('hidden')) showTip2('오른쪽에서 이 인물의 이야기와 관계를 읽을 수 있어요.', panel.querySelector('h2') || panel, 'below');
+    showTip2(L('다른 인물을 누르면 그 인물이 가운데로 와요. 두 손가락으로 확대할 수 있어요.', 'Tap anyone to bring them to the middle. Pinch with two fingers to zoom.'), c, 'below', () => {
+      if(innerWidth <= 900){ const g = document.querySelector('.panel .grab'); if(g && !panel.classList.contains('hidden')) showTip2(L('아래 창을 위로 끌어 올리면 이 인물의 이야기를 읽을 수 있어요.', 'Pull the panel below upwards to read their story.'), g, 'above'); }
+      else if(!panel.classList.contains('hidden')) showTip2(L('오른쪽에서 이 인물의 이야기와 관계를 읽을 수 있어요.', 'Read their story and family on the right.'), panel.querySelector('h2') || panel, 'below');
     });
   }, 1200);
 }
@@ -1704,6 +1756,7 @@ const timeBody = $('#timeBody');
 const TL = window.TIMELINE || {eras:[], ladders:[]};
 let tlBuilt = false, tlScroll = 0;
 const ORD = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열', '열한', '열두'];
+const ORD_EN = ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth'];
 // 장면 그림을 카드 크기(4:3)로 줄여서 씀: 큰 그림 수십 장을 그대로 띄우면 휴대폰 메모리가 모자람
 const sceneThumbs = new Map();
 function sceneThumb(url){
@@ -1725,12 +1778,12 @@ const tlIO = 'IntersectionObserver' in window ? new IntersectionObserver(es => e
   sceneThumb(f).then(u => { if(!u) return; const im = new Image(); im.alt = ''; im.className = 'scn'; im.src = u; pic.appendChild(im); });
 }), {root:timeBody, rootMargin:'400px 0px'}) : null;
 function buildTime(){
-  const nav = TL.eras.map((er, i) => `<button data-era="${er.k}">${esc(er.t.replace(/^영웅의 시대 /, '영웅 '))}</button>`).join('');
-  let html = `<div class="tl-nav" id="tlNav">${nav}</div><div class="wrap"><div class="tl-intro"><h3>신화 타임라인</h3><p>세상의 시작부터 오디세우스의 귀향까지, 순서대로 따라가 봐요</p></div><div class="tl">`;
+  const nav = TL.eras.map((er, i) => `<button data-era="${er.k}">${esc(EN_ON ? er.t.replace(/^Age of Heroes (\w+): .*/, 'Heroes $1') : er.t.replace(/^영웅의 시대 /, '영웅 '))}</button>`).join('');
+  let html = `<div class="tl-nav" id="tlNav">${nav}</div><div class="wrap"><div class="tl-intro"><h3>${L('신화 타임라인', 'Myth Timeline')}</h3><p>${L('세상의 시작부터 오디세우스의 귀향까지, 순서대로 따라가 봐요', 'Follow the myths in order, from the birth of the world to the homecoming of Odysseus')}</p></div><div class="tl">`;
   TL.eras.forEach((er, ei) => {
-    html += `<section class="tl-era" id="era-${er.k}" style="--tint:${er.tint}"><div class="no">${ORD[ei]} 번째 시대</div><h4>${esc(er.t)}</h4><p>${esc(er.sub)}</p></section>`;
+    html += `<section class="tl-era" id="era-${er.k}" style="--tint:${er.tint}"><div class="no">${L(`${ORD[ei]} 번째 시대`, `${ORD_EN[ei]} age`)}</div><h4>${esc(er.t)}</h4><p>${esc(er.sub)}</p></section>`;
     if(er.k === 'hero1' && TL.ladders.length){
-      html += `<div class="tl-lad"><h5>세대 사다리</h5><p>영웅들은 서로 할아버지와 손자 사이이기도 해요. 왼쪽이 먼저 태어난 세대예요.</p>` +
+      html += `<div class="tl-lad"><h5>${L('세대 사다리', 'Family ladder')}</h5><p>${L('영웅들은 서로 할아버지와 손자 사이이기도 해요. 왼쪽이 먼저 태어난 세대예요.', 'Many heroes were grandparents and grandchildren of one another. The oldest generation is on the left.')}</p>` +
         TL.ladders.map(l => `<div><small>${esc(l.t)}</small><div class="row">${l.ids.map((id, k) => (k ? '<span class="arr">→</span>' : '') + `<button class="step" data-go="${id}" aria-label="${esc(P[id].ko)}">${avHTML(P[id], 40)}<span>${esc(P[id].ko)}</span></button>`).join('')}</div></div>`).join('') + `</div>`;
     }
     er.ev.forEach(ev => {
@@ -1738,9 +1791,9 @@ function buildTime(){
       const f = ev.img ? `images/scenes/${ev.img}.png` : '';
       const tint = er.tint;
       html += `<article class="tl-ev" style="--tint:${tint}"><b class="ttl">${esc(ev.t)}</b>
-        <div class="l"><div class="pic" ${f ? `data-f="${f}"` : ''} style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 80%)"><div class="faces">${who.slice(0, 3).map(id => avHTML(P[id], 44)).join('')}</div></div>${ev.ch ? `<button class="rd" data-ch="${ev.ch}">이야기책 ${ev.ch}장에서 읽기 ›</button>` : ''}</div>
-        <div class="r"><p class="d">${esc(ev.d)}</p>${ev.gen ? `<span class="gen">세대 · ${esc(ev.gen)}</span>` : ''}</div>
-        <div class="tl-who">${who.slice(0, 8).map(id => `<button data-go="${id}" title="${esc(P[id].ko)}" aria-label="${esc(P[id].ko)} 보기">${avHTML(P[id], 36)}</button>`).join('')}</div></article>`;
+        <div class="l"><div class="pic" ${f ? `data-f="${f}"` : ''} style="background:radial-gradient(circle at 50% 45%,var(--white),${tint} 80%)"><div class="faces">${who.slice(0, 3).map(id => avHTML(P[id], 44)).join('')}</div></div>${ev.ch ? `<button class="rd" data-ch="${ev.ch}">${L(`이야기책 ${ev.ch}장에서 읽기`, `Read it in ${CH(ev.ch)}`)} ›</button>` : ''}</div>
+        <div class="r"><p class="d">${esc(ev.d)}</p>${ev.gen ? `<span class="gen">${L('세대', 'Family')} · ${esc(ev.gen)}</span>` : ''}</div>
+        <div class="tl-who">${who.slice(0, 8).map(id => `<button data-go="${id}" title="${esc(P[id].ko)}" aria-label="${L(esc(P[id].ko) + ' 보기', 'See ' + esc(P[id].ko))}">${avHTML(P[id], 36)}</button>`).join('')}</div></article>`;
     });
   });
   html += `</div></div>`;
@@ -1769,8 +1822,8 @@ timeBody.addEventListener('scroll', () => {
 }, {passive:true});
 function openTime(){
   hideBackPill(); ovBook.classList.remove('on'); ovQuiz.classList.remove('on'); ovTime.classList.add('on');
-  setHash('timeline'); document.title = '타임라인 · 그리스 신화 관계도';
-  Sound.scene('main'); track('/타임라인', '타임라인');
+  setHash('timeline'); document.title = L('타임라인', 'Timeline') + ' · ' + APP_NAME;
+  Sound.scene('main'); track('/타임라인', L('타임라인', 'Timeline'));
   if(!tlBuilt) buildTime();
   timeBody.scrollTop = tlScroll;
   timeBody.dispatchEvent(new Event('scroll'));
@@ -1780,6 +1833,37 @@ $('#timeClose').onclick = () => { tlScroll = timeBody.scrollTop; closeToGraph();
 $('#timeTop').onclick = () => timeBody.scrollTo({top:0, behavior:'smooth'});
 $('#btnTime').onclick = () => openTime();
 $('#wTime').onclick = () => openTime();
+
+/* ---------- 영어판 고정 문구 ---------- */
+if(EN_ON){
+  const T = {'그리스 신화 관계도':'Greek Myth Map','신·영웅·괴물의 얽히고설킨 이야기':'Gods, heroes and monsters, all tangled together','처음 화면':'Home',
+    '인물 검색':'Search characters','지우기':'Clear','이야기책':'Storybook','퀴즈':'Quiz','타임라인':'Timeline','전체 목록':'All characters','목록':'List',
+    '아무나 보기':'Surprise me','관계도':'Relationship map','소리 끄기':'Sound off','확대':'Zoom in','축소':'Zoom out','화면에 맞추기':'Fit to screen',
+    '누구의 이야기가 궁금하세요?':'Whose story would you like to hear?','이름을 검색하면 그 인물을 중심으로 관계도가 펼쳐져요':'Search for a name and their family and friends will spread out around them',
+    '이야기책 읽기':'Read the storybook','퀴즈 풀기':'Take a quiz','타임라인 보기':'See the timeline','목록 안에서 찾기':'Search the list','닫기':'Close','차례':'Contents',
+    '퀴즈 처음':'Quiz home','이름·초성·별칭으로 검색 (예: ㅎㄹㅋ, 포세이든, 클레스)':'Search by name or nickname (e.g. Hercules, Zeuss, cles)','처음':'Home','신화 퀴즈':'Myth Quiz','신화 타임라인':'Myth Timeline','맨 위로':'Back to top','관계도로':'Back to the map'};
+  const tr = v => T[v.trim()] ? v.replace(v.trim(), T[v.trim()]) : v;
+  document.querySelectorAll('body *').forEach(el => {
+    if(el.parentElement && el.parentElement.closest('#graph, #panel, #bookBody, #quizBody, #timeBody, #mbody, #suggest')) return;
+    ['title', 'aria-label', 'placeholder'].forEach(a => { const v = el.getAttribute(a); if(v && T[v]) el.setAttribute(a, T[v]); });
+    el.childNodes.forEach(n => { if(n.nodeType === 3 && n.nodeValue.trim()) n.nodeValue = tr(n.nodeValue); });
+  });
+  const tips = document.querySelector('.welcome .tips');
+  if(tips) tips.innerHTML = '<span>Typos are fine <code>Heracels</code></span><span>Part of a name <code>cles</code></span><span>Other names <code>Hercules</code> <code>Jupiter</code></span>';
+  const md = document.querySelector('meta[name=description]'); if(md) md.content = 'Search and explore the gods, heroes and monsters of Greek myth on a relationship map';
+}
+// 언어 바꾸기 버튼 (소리 버튼 아래)
+(() => {
+  const z = document.querySelector('.zoom'); if(!z) return;
+  const b = document.createElement('button');
+  b.className = 'ibtn langbtn'; b.type = 'button';
+  b.textContent = EN_ON ? '한' : 'EN';
+  b.title = EN_ON ? '한국어로 보기' : 'Read in English';
+  b.setAttribute('aria-label', b.title);
+  b.onclick = () => { const to = EN_ON ? 'ko' : 'en'; try { localStorage.setItem('myth.lang', to); } catch(e){} location.href = location.pathname + '?lang=' + to + location.hash; };
+  const snd = z.querySelector('.sndbtn');
+  if(snd && snd.nextSibling) z.insertBefore(b, snd.nextSibling); else z.appendChild(b);
+})();
 
 /* ---------- 시작 ---------- */
 const FEAT = ['zeus','heracles','athena','medusa','achilles','odysseus','poseidon','perseus','hades','persephone','oedipus','cerberus'];
