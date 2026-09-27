@@ -30,6 +30,8 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+/* 한글은 단어 중간에서 줄이 바뀌지 않게 (아주 긴 낱말만 예외로 끊음) */
+body{word-break:keep-all;overflow-wrap:anywhere}
 body{
   font-family:var(--font);color:var(--ink);
   background:url(images/ui/bg.png) repeat, var(--cream);
@@ -379,7 +381,7 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 .welcome .mode .ic{width:64px;height:64px;border-radius:50%;background:var(--white);border:1.5px solid var(--ink);display:grid;place-items:center;overflow:hidden}
 .welcome .mode .ic img{width:48px;height:48px;object-fit:contain}
 .welcome .mode .ic svg{width:30px;height:30px}
-.welcome .mode b{font-weight:400;font-size:15.5px;line-height:1.25}
+.welcome .mode b{font-weight:400;font-size:15.5px;line-height:1.25;display:block;align-self:stretch;text-align:center;white-space:nowrap}
 @media (max-width:360px){ .welcome .modes{gap:8px} .welcome .mode .ic{width:54px;height:54px} .welcome .mode .ic img{width:40px;height:40px} .welcome .mode b{font-size:14px} }
 @media (max-width:900px){
   .ov .obar h2{font-size:24px}
@@ -1893,9 +1895,10 @@ function fitText(el, min, allowTwo, boxEl){
   }
 }
 function fitAll(){
-  if(innerWidth <= 900) fitText(document.querySelector('.brand h1'), 12, false, document.querySelector('.brand')); else { const h = document.querySelector('.brand h1'); h.style.fontSize = ''; }
+  if(innerWidth <= 900) fitText(document.querySelector('.brand h1'), 10, false, document.querySelector('.brand')); else { const h = document.querySelector('.brand h1'); h.style.fontSize = ''; }
   fitText(document.querySelector('.welcome h2'), 28, true);
   fitText(document.querySelector('.welcome p'), 16, true);
+  document.querySelectorAll('.welcome .mode b').forEach(b => fitText(b, 11, false));
 }
 addEventListener('resize', () => requestAnimationFrame(fitAll));
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
