@@ -133,6 +133,8 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 .edge.hl{stroke-width:4;opacity:1}
 @keyframes fadein{from{opacity:0}}
 .more .ring{fill:var(--gold)}
+.node.framed .ring,.node.framed:hover .ring,.node.framed:focus .ring{stroke:none}
+.node.framed:focus-visible .ring{stroke:#C9A43A;stroke-width:5}
 .sector-label{font-family:var(--hand);font-size:calc(22px * min(var(--ts,1), 1.4));fill:var(--muted)}
 
 /* 상세 패널 */
@@ -144,7 +146,9 @@ button:focus-visible,[role=button]:focus-visible,a:focus-visible,input:focus-vis
 .hero{display:flex;gap:14px;align-items:center}
 .portrait{position:relative;width:118px;height:118px;flex-shrink:0}
 .portrait .av{width:100%;height:100%}
-.portrait .frame{position:absolute;inset:-12.5%;width:125%;height:125%;pointer-events:none} /* 새 테두리 그림: 구멍이 정중앙, 반지름이 그림 폭의 41% 이상 → 초상 원이 잎에 닿지 않음 */
+/* 월계수 테두리: 잎 띠 한가운데가 초상 원 가장자리를 덮도록 키우고, 띠 중심이 그림 중심보다 살짝 위라서 그만큼 내림 */
+.portrait .frame{position:absolute;left:-7.47%;top:-6.34%;width:114.9%;height:114.9%;pointer-events:none;z-index:1}
+.portrait.framed .av{border:0}
 .hero h2{margin:0;font-size:26px;line-height:1.15}
 .hero .en{font-size:13px;color:var(--muted);margin-top:3px}
 .catb{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:12.5px;padding:3px 10px;border-radius:12px;border:1px solid var(--ink)}
@@ -869,7 +873,7 @@ function layout(center, nb){
 }
 
 function nodeEl(parent, p, x, y, r, opts){
-  const g = mk('g', {class:'node' + (opts.center ? ' center' : '') + (opts.more ? ' more' : ''), transform:`translate(${x},${y})`, tabindex:0, role:'button', 'aria-label':opts.aria || p?.ko || ''}, parent);
+  const g = mk('g', {class:'node' + (opts.center ? ' center' : '') + (opts.more ? ' more' : '') + (FRAME_OK && !opts.more ? ' framed' : ''), transform:`translate(${x},${y})`, tabindex:0, role:'button', 'aria-label':opts.aria || p?.ko || ''}, parent);
   const inner = mk('g', {class:'pop', style:`animation-delay:${opts.delay || 0}ms;transform-origin:0 0`}, g);
   mk('circle', {class:'hit', r:r + 6, 'data-r':r + 6}, inner);
   if(opts.more){
@@ -877,7 +881,7 @@ function nodeEl(parent, p, x, y, r, opts){
     const t = mk('text', {'text-anchor':'middle', dy:'0.35em', class:'nm', style:'font-size:15px'}, inner); t.textContent = opts.label;
     return g;
   }
-  mk('circle', {r:r + 3, fill:CAT_COLOR[p.cat], stroke:'none'}, inner);
+  mk('circle', {r:FRAME_OK ? r : r + 3, fill:CAT_COLOR[p.cat], stroke:'none'}, inner);
   mk('circle', {r, class:'ring', fill:CAT_COLOR[p.cat]}, inner);
   const ini = mk('text', {'text-anchor':'middle', dy:'0.36em', style:`font-family:var(--hand);font-size:${Math.round(r*1.15)}px`, fill:'#3A3739'}, inner);
   ini.textContent = initialOf(p);
@@ -886,8 +890,8 @@ function nodeEl(parent, p, x, y, r, opts){
   const setImg = u => { if(!u) return; if(opts.center) apply(u); else thumbOf(u, 192).then(apply); };
   const cached = portraitUrl.get(p.id);
   if(typeof cached === 'string') setImg(cached); else if(cached !== null) findPortrait(p.id).then(setImg);
-  mk('circle', {r, fill:'none', stroke:'#3A3739', 'stroke-width':opts.center ? 2.4 : 1.6}, inner);
-  if(FRAME_OK) mk('image', {href:opts.center ? 'images/ui/frame.png' : FRAME_SRC, x:-r*1.25, y:-r*1.25, width:r*2.5, height:r*2.5, style:'pointer-events:none'}, inner);
+  if(!FRAME_OK) mk('circle', {r, fill:'none', stroke:'#3A3739', 'stroke-width':opts.center ? 2.4 : 1.6}, inner);
+  if(FRAME_OK) mk('image', {href:opts.center ? 'images/ui/frame.png' : FRAME_SRC, x:-r*1.149, y:-r*1.149 + r*0.0113, width:r*2.299, height:r*2.299, style:'pointer-events:none'}, inner);
   if(catIcon[p.cat] && !opts.center) mk('image', {href:catIcon[p.cat], x:r*0.45, y:-r*1.05, width:r*0.7, height:r*0.7}, inner);
   const nm = mk('text', {'text-anchor':'middle', y:r + (opts.center ? 26 : 18), class:'nm'}, inner);
   nm.textContent = p.ko;
@@ -1051,7 +1055,7 @@ function renderPanel(id, nb){
   panel.innerHTML = `
     <button class="grab" aria-label="${L('패널 크기 바꾸기', 'Resize panel')}"></button>
     <div class="hero">
-      <div class="portrait">${avHTML(p, 118)}${FRAME_OK ? '<img class="frame" src="images/ui/frame.png" alt="">' : ''}</div>
+      <div class="portrait${FRAME_OK ? ' framed' : ''}">${avHTML(p, 118)}${FRAME_OK ? '<img class="frame" src="images/ui/frame.png" alt="">' : ''}</div>
       <div>
         <h2>${esc(p.ko)}</h2>
         <div class="en">${esc(p.en)}${p.ro && p.ro !== p.en ? L(' · 로마 ', ' · Latin ') + esc(p.ro) : ''}</div>
