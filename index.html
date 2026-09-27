@@ -1838,7 +1838,7 @@ $('#wTime').onclick = () => openTime();
 if(EN_ON){
   const T = {'그리스 신화 관계도':'Greek Myth Map','신·영웅·괴물의 얽히고설킨 이야기':'Gods, heroes and monsters, all tangled together','처음 화면':'Home',
     '인물 검색':'Search characters','지우기':'Clear','이야기책':'Storybook','퀴즈':'Quiz','타임라인':'Timeline','전체 목록':'All characters','목록':'List',
-    '아무나 보기':'Surprise me','관계도':'Relationship map','소리 끄기':'Sound off','확대':'Zoom in','축소':'Zoom out','화면에 맞추기':'Fit to screen',
+    '아무나 보기':'Surprise me','아무나':'Surprise','관계도':'Relationship map','소리 끄기':'Sound off','확대':'Zoom in','축소':'Zoom out','화면에 맞추기':'Fit to screen',
     '누구의 이야기가 궁금하세요?':'Whose story would you like to hear?','이름을 검색하면 그 인물을 중심으로 관계도가 펼쳐져요':'Search for a name and their family and friends will spread out around them',
     '이야기책 읽기':'Read the storybook','퀴즈 풀기':'Take a quiz','타임라인 보기':'See the timeline','목록 안에서 찾기':'Search the list','닫기':'Close','차례':'Contents',
     '퀴즈 처음':'Quiz home','이름·초성·별칭으로 검색 (예: ㅎㄹㅋ, 포세이든, 클레스)':'Search by name or nickname (e.g. Hercules, Zeuss, cles)','처음':'Home','신화 퀴즈':'Myth Quiz','신화 타임라인':'Myth Timeline','맨 위로':'Back to top','관계도로':'Back to the map'};
@@ -1850,6 +1850,7 @@ if(EN_ON){
   });
   const tips = document.querySelector('.welcome .tips');
   if(tips) tips.innerHTML = '<span>Typos are fine <code>Heracels</code></span><span>Part of a name <code>cles</code></span><span>Other names <code>Hercules</code> <code>Jupiter</code></span>';
+  document.title = APP_NAME;
   const md = document.querySelector('meta[name=description]'); if(md) md.content = 'Search and explore the gods, heroes and monsters of Greek myth on a relationship map';
 }
 // 언어 바꾸기 버튼 (소리 버튼 아래)
