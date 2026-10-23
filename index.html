@@ -4,6 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=overlays-content">
 <title>그리스 신화 관계도</title>
+<script>
+window.CLOUD_SYNC = {
+  app: 'greek-myth-map', title: '그리스 신화 관계도', keys: ['myth.*'], share: true,
+  theme: { bg: '#FBF6E8', card: '#FFFDF6', ink: '#3B3326', soft: '#7A6E5C', accent: '#EED9A4' },
+  summary: function (d) {
+    var b = (d['myth.book'] || {}).j || {}, h = (d['myth.hof'] || {}).j || {}, n = 0, k;
+    for (k in h) n += (h[k] || []).length;
+    return '이야기책 ' + ((b.done || []).length) + '장 읽음 · 퀴즈 명예의 전당 ' + n + '건';
+  }
+};
+</script>
+<script src="cloud/cloud-sync.js"></script>
 <meta name="description" content="그리스 신화의 신·영웅·괴물을 검색하고 관계도로 탐색하는 앱">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#FBF6E8">
